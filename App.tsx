@@ -5,21 +5,15 @@ import userSevices from './src/services/UserService';
 import { Container } from 'inversify';
 import container from './src/dependencies/dependencies';
 import { PostClient } from './src/networking/PostClient';
+import { ProfileComponent } from './src/presentation/compoments/UseContentExample';
 
 function App(): React.JSX.Element {
- const userSevices = container.get<userSevices>('userSevices');
- const postClient = container.get<PostClient>('PostClient');
+  const userSevices = container.get<userSevices>('userSevices');
+  const postClient = container.get<PostClient>('PostClient');
   return (
-      <>
-      <Button title="Click me" onPress={()=>{
-       postClient.fetchPost().then(posts=>{
-        posts.forEach(post=>{
-          console.log(post.id);
-        })
-        })
-      }}
-      />
-      </>
+    <>
+     <ProfileComponent />
+    </>
   );
 }
 
