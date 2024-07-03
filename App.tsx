@@ -5,14 +5,14 @@ import userSevices from './src/services/UserService';
 import { Container } from 'inversify';
 import container from './src/dependencies/dependencies';
 import { PostClient } from './src/networking/PostClient';
-import { ProfileComponent } from './src/presentation/compoments/UseContentExample';
+import { AppNavigation } from './src/presentation/navigation/AppNavigation';
 
 function App(): React.JSX.Element {
   const userSevices = container.get<userSevices>('userSevices');
   const postClient = container.get<PostClient>('PostClient');
   return (
     <>
-     <ProfileComponent />
+    <AppNavigation/>
     </>
   );
 }
