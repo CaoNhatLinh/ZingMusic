@@ -1,20 +1,14 @@
+import React from 'react';
+import { Provider } from 'react-redux';
+import store from './src/store';
+import { AppNavigation } from './src/navigation/AppNavigation';
 
-import React,{useEffect,useRef,useState} from 'react';
-import { Button, Alert } from 'react-native';
-import userSevices from './src/services/UserService';
-import { Container } from 'inversify';
-import container from './src/dependencies/dependencies';
-import { PostClient } from './src/networking/PostClient';
-import { AppNavigation } from './src/presentation/navigation/AppNavigation';
-
-function App(): React.JSX.Element {
-  const userSevices = container.get<userSevices>('userSevices');
-  const postClient = container.get<PostClient>('PostClient');
+const App = () => {
   return (
-    <>
-    <AppNavigation/>
-    </>
+    <Provider store={store}>
+      <AppNavigation />
+    </Provider>
   );
-}
+};
 
 export default App;

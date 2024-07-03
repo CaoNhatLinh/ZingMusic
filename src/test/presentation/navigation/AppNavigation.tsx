@@ -1,7 +1,7 @@
 import { NavigationContainer } from "@react-navigation/native"
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import Icon from 'react-native-vector-icons/FontAwesome';
+import Icon from 'react-native-vector-icons/Fontisto';
 import LoginScreen from "../pages/Login";
 import RegisterScreen from "../pages/Register";
 import { HomeScreen } from "../pages/Home";
@@ -34,9 +34,7 @@ const InappNavigation = () => {
         
         <Tab.Navigator
         screenOptions={({route}) => ({
-            tabBarIcon: ({focused, color,size}) => {
-                return <Icon name='home' color={color} size={20}/>
-              },
+            
            tabBarActiveTintColor: 'tomato',
            tabBarInactiveTintColor: 'gray',
         })}
