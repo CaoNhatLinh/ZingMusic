@@ -21,8 +21,8 @@ export const AppNavigation = () => {
             <Stack.Navigator >
                 <Stack.Screen name="inapp" component={InappNavigation} options={{ headerShown: false }} />
                 <Stack.Screen name="DetailPlaylist" 
-                component={DetailPlaylist} 
-                options={ ({ route }) => ({ title: route.params.name, headerShown: true  }) } />
+                    component={DetailPlaylist} 
+                    options={ ({ route }: { route: { params?: { name?: string } } }) => ({ title: route.params?.name, headerShown: true  }) } />
             </Stack.Navigator>
         </NavigationContainer>
     );
