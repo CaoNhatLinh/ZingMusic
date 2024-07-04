@@ -2,7 +2,9 @@ import React, { useState, useEffect } from "react"
 import PlaylistCover from "../components/PlaylistCover"
 import { getHomePlayList } from "../api/home"
 import Loading from "../components/Loading"
-
+import { ActivityIndicator, ScrollView, Text, View } from "react-native"
+import colors from "../assets/colors"
+import { useNavigation } from "@react-navigation/native"
 interface typePlaylistCover{
   items: []
   title: string
@@ -13,9 +15,12 @@ interface typePlaylistCover{
 }
 
 const Home: React.FC = () => {
-
+  const navigate = useNavigation()
   const [dataHome, setdataHome] = useState<Array<object> | undefined>()
-
+  const handleClickPlaylist = ({ playlistId }: { playlistId: string }) => {
+    console.log(playlistId)
+    navigate.navigate('DetailPlaylist', { playlistId })
+  }
   useEffect(() => {
     (
       async () => {
@@ -24,44 +29,42 @@ const Home: React.FC = () => {
     )()
   }, [])
 
-  return (
+return (
     <>
-      <main className="inset-0 box-border pt-[64px] pb-[96px] px-[10vw]">
-        {/* Playlist */}
-        <div className="mt-8">
-          {
-            dataHome
-            ?
-            dataHome.map((e: any, i: number) => (
-              <div key={i}>
-                <div
-                  className="flex justify-between items-end text-[28px] font-bold text-[color:var(--color-text)] mt-9 mb-3 uppercase">
-                  {(e.title === "") ? (e.sectionId.slice(1)) : (e.title)}
-                </div>
-                <div
-                  className="grid grid-cols-5 gap-x-6 gap-y-11">
-                  {
-                    e.items.map((element: typePlaylistCover, index: number) => (
-                      <PlaylistCover
-                        key={index}
-                        title={element.title}
-                        link={`/playlist/${element.encodeId}`}
-                        thumbnail={element.thumbnail}
-                        sortDescription={element.sortDescription}
-                      />
-                    ))
-                  }
-                </div>
-              </div>
-            ))
-            :
-            <Loading />
-          }
-        </div>
-        {/* End Playlist */}
-      </main>
+   
+    <View >
+        <ScrollView style={{ marginTop: 8 }}>
+            {
+                dataHome
+                ?
+                dataHome.map((e: any, i: number) => (
+                    <View key={i}>
+                        <Text style={{ justifyContent: 'space-between', alignItems: 'flex-end', fontSize: 28, fontWeight: 'bold', color: colors.darkText, marginTop: 9, marginBottom: 3 }}>
+                            {(e.title === "") ? (e.sectionId.slice(1)) : (e.title)}
+                        </Text>
+                        <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', marginTop: 11 }}>
+                            {
+                               
+                               e.items.map((element: typePlaylistCover, index: number) => (
+                                <PlaylistCover
+                                  key={index}
+                                  title={element.title}
+                                  thumbnail={element.thumbnail}
+                                  sortDescription={element.sortDescription}
+                                  handleClickPlaylist={() => handleClickPlaylist({ playlistId: element.encodeId })}
+                                />
+                              ))
+                            }
+                        </View>
+                    </View>
+                ))
+                :
+                <ActivityIndicator />
+            }
+        </ScrollView>
+    </View>
     </>
-  )
+)
 }
 
 export default Home

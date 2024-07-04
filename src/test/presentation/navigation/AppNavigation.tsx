@@ -6,6 +6,7 @@ import LoginScreen from "../pages/Login";
 import RegisterScreen from "../pages/Register";
 import { HomeScreen } from "../pages/Home";
 import { ProfileScreen } from "../pages/Profile";
+import RouterPage from "../../../routes";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -15,6 +16,7 @@ export const AppNavigation = () => {
         <Stack.Navigator screenOptions={{headerShown:false}}>
             <Stack.Screen name="auth" component={AuthNavigation} />
             <Stack.Screen name="inapp" component={InappNavigation} />
+            <Stack.Screen name="router" component={RouterPage} />
         </Stack.Navigator>
     </NavigationContainer>  
     );

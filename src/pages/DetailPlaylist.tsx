@@ -1,53 +1,52 @@
-import React, { useState, useEffect } from "react"
-import { useParams } from "react-router-dom"
-import { getDetailPlaylist } from "../api/detailPlaylist"
-import DetailPlaylistInfo from "../components/DetailPlaylistInfo"
-import TrackListDetailPlaylist from "../components/TrackPlaylist"
-import { useAppDispatch } from "../hooks/redux"
-import { setPlaylistSong } from "../redux/features/audioSlice"
-import Loading from "../components/Loading"
+import React, { useState, useEffect } from "react";
+import { View, ActivityIndicator } from "react-native";
+import { useRoute } from "@react-navigation/native";
+import { getDetailPlaylist } from "../api/detailPlaylist";
+import DetailPlaylistInfo from "../components/DetailPlaylistInfo";
+import TrackListDetailPlaylist from "../components/TrackPlaylist";
+import { useAppDispatch } from "../hooks/redux";
+import { setPlaylistSong } from "../redux/features/audioSlice";
+import { ScrollView } from "react-native-gesture-handler";
+import colors from "../assets/colors";
 
 interface playlistType {
-  thumbnailM: string
-  title: string
-  artists: []
-  description: string
-  like: number
-  contentLastUpdate: number
+  thumbnailM: string;
+  title: string;
+  artists: [];
+  description: string;
+  like: number;
+  contentLastUpdate: number;
   song: {
-    total: string
-    items: []
-  }
+    total: string;
+    items: [];
+  };
 }
 
 const Playlist: React.FC = () => {
-
-  const [dataDetailPlaylist, setDataDetailPlaylist] = useState<playlistType>()
-
-  const params = useParams<{playlistId: string}>()
-
-  const dispatch = useAppDispatch()
-
+  const [dataDetailPlaylist, setDataDetailPlaylist] = useState<playlistType>();
+  const route = useRoute();
+  const dispatch = useAppDispatch();
   useEffect(() => {
-    (
-      async () => {
-        if(params.playlistId) {
-          const detailPlaylist:playlistType = await getDetailPlaylist(params.playlistId)
-          setDataDetailPlaylist(detailPlaylist)
-          dispatch(setPlaylistSong(detailPlaylist.song.items))
-        }
+    (async () => {
+      
+      const playlistId = (route.params as { playlistId?: string })?.playlistId ?? "";
+      if (playlistId) {
+       
+        const detailPlaylist: playlistType = await getDetailPlaylist(playlistId);
+        setDataDetailPlaylist(detailPlaylist);
+        dispatch(setPlaylistSong(detailPlaylist.song.items));
       }
-    )()
-  }, [params, dispatch])
+    })();
+  }, [route.params,dispatch]);
 
   return (
     <>
       {/* {console.log(dataDetailPlaylist)} */}
-      <div className="mx-[10vw] mt-16 mb-24">
-        {
-          dataDetailPlaylist
-          ?
+      <View style={{   marginTop: 16, marginBottom: 24,backgroundColor:colors.black }}>
+      <ScrollView>
+        {dataDetailPlaylist ? (
           <>
+            <View style={{ paddingHorizontal: "10%"}}>
             <DetailPlaylistInfo
               thumbnailM={dataDetailPlaylist.thumbnailM}
               title={dataDetailPlaylist.title}
@@ -57,14 +56,17 @@ const Playlist: React.FC = () => {
               like={dataDetailPlaylist.like}
               contentLastUpdate={dataDetailPlaylist.contentLastUpdate}
             />
-            <TrackListDetailPlaylist items={dataDetailPlaylist.song.items}/>
+            </View>
+            <TrackListDetailPlaylist items={dataDetailPlaylist.song.items} />
           </>
-          :
-          <Loading />
-        }
-      </div>
+        ) 
+        : (
+          <ActivityIndicator />
+        )}
+        </ScrollView>
+      </View>
     </>
-  )
-}
+  );
+};
 
-export default Playlist
+export default Playlist;

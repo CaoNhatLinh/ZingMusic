@@ -1,74 +1,75 @@
 import React, { useState } from "react"
-import { Link } from "react-router-dom"
+import { Image, Text, TouchableOpacity, View,StyleSheet } from "react-native"
+import { useNavigation } from '@react-navigation/native'; // Import the useNavigation hook
 
 interface coverProps {
   title: string
   sortDescription?: string
   thumbnail: string
-  link: string
+  handleClickPlaylist: (playlistId: any) => void
 }
 
-const Cover: React.FC<coverProps> = ({ title, sortDescription, thumbnail, link }) => {
+const styles = StyleSheet.create({
+  roundedContainer: {
+    borderRadius: 10,
+  },
+  thumbnail: {
+    width: 100,
+    height: 100,
+  },
+  imageBlur: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: 100,
+    height: 100,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    borderRadius: 10,
+  },
+  contentContainer: {
+    marginTop: 8,
+  },
+  title: {
+    fontSize: 12,
+    fontWeight: 'bold',
+  },
+  sortDescription: {
+  },
+});
+
+
+// Usage:
+const Cover: React.FC<coverProps> = ({ title, sortDescription, thumbnail ,handleClickPlaylist}) => {
 
   const [isCoverHover, setCoverHover] = useState(false)
-
   return (
-    <div>
-      <div className="relative">
-        {/* Thumbnail */}
-        <Link to={link}>
-          <img
-            className="rounded-xl w-[100%] cursor-pointer"
-            src={thumbnail}
-            alt={title}
-            onMouseOver = {() => {
-              setCoverHover(true)
-            }}
-            onMouseOut = {() => {
-              setCoverHover(false)
-            }}
-          />
-        </Link>
-        {/* End Thumbnail */}
+    <View>
+      <TouchableOpacity onPress={handleClickPlaylist}>
+      <View style={styles.roundedContainer}>
+          <Image style={styles.thumbnail} source={{ uri: thumbnail }} alt={title} />
+        {isCoverHover && <View style={styles.imageBlur} />}
+      </View>
 
-        {/* Image Blur */}
-        <div
-          className={`absolute top-3 w-full h-full z-[-1] bg-cover rounded-xl blur-lg scale-95 transition-opacity duration-300
-            ${(isCoverHover === false ? "opacity-0" : "opacity-100")}
-          `}
-          style={{
-            backgroundImage: `url(${thumbnail})`
-          }}>
-        </div>
-        {/* End Image Blur */}
-      </div>
-      <div className="mt-2">
+      <View style={styles.contentContainer}>
         {/* Title */}
-        <div className="text-base font-semibold text-[color:var(--color-text)] truncate hover:underline">
-          <Link to={link}>
+       
+          <Text style={styles.title} numberOfLines={1}>
             {title}
-          </Link>
-        </div>
+          </Text>
+        
         {/* End Title */}
 
         {/* Sort Description */}
-        <div
-          className="text-xs text-[color:var(--color-text)] opacity-60"
-          style={{
-            maxWidth: "100%",
-            display: "-webkit-box",
-            WebkitBoxOrient: "vertical",
-            WebkitLineClamp: 2,
-            overflow: "hidden",
-            textOverflow: "ellipsis",
-          }}
-        >
-          <span>{sortDescription}</span>
-        </div>
+        {sortDescription && (
+          <Text style={styles.sortDescription} numberOfLines={2}>
+            {sortDescription}
+          </Text>
+        )}
         {/* End Sort Description */}
-      </div>
-    </div>
-  )
+      </View>
+      </TouchableOpacity>
+    </View>
+  );
 }
 
 export default Cover

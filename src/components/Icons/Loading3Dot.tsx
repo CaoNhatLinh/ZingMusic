@@ -1,18 +1,85 @@
-import React from "react"
-import { SvgProps } from "../../utils/types"
+import React from "react";
+import { View, Animated, Easing } from "react-native";
 
-const Loading3Dot: React.FC<SvgProps> = ({ setColor, setWidth, setHeight, ...orthers }) => {
-  return (
-    <svg
-      width={setWidth}
-      height={setHeight}
-      viewBox="0 0 24 24"
-      xmlns="http://www.w3.org/2000/svg"
-      fill={setColor}
-      >
-        <circle cx="4" cy="12" r="3"><animate id="a" begin="0;b.end+0.25s" attributeName="cy" calcMode="spline" dur="0.6s" values="12;6;12" keySplines=".33,.66,.66,1;.33,0,.66,.33"/></circle><circle cx="12" cy="12" r="3"><animate begin="a.begin+0.1s" attributeName="cy" calcMode="spline" dur="0.6s" values="12;6;12" keySplines=".33,.66,.66,1;.33,0,.66,.33"/></circle><circle cx="20" cy="12" r="3"><animate id="b" begin="a.begin+0.2s" attributeName="cy" calcMode="spline" dur="0.6s" values="12;6;12" keySplines=".33,.66,.66,1;.33,0,.66,.33"/></circle>
-    </svg>
-  )
+interface Loading3DotProps {
+  setColor?: string;
+  setWidth?: number;
+  setHeight?: number;
 }
 
-export default Loading3Dot
+const Loading3Dot: React.FC<Loading3DotProps> = ({
+  setColor = "black",
+  setWidth = 24,
+  setHeight = 24,
+}) => {
+  const animatedValue = React.useRef(new Animated.Value(0)).current;
+
+  React.useEffect(() => {
+    const animation = Animated.loop(
+      Animated.sequence([
+        Animated.timing(animatedValue, {
+          toValue: 1,
+          duration: 600,
+          easing: Easing.linear,
+          useNativeDriver: true,
+        }),
+        Animated.timing(animatedValue, {
+          toValue: 0,
+          duration: 0,
+          useNativeDriver: true,
+        }),
+      ])
+    );
+
+    animation.start();
+
+    return () => {
+      animation.stop();
+    };
+  }, [animatedValue]);
+
+  const translateY = animatedValue.interpolate({
+    inputRange: [0, 0.5, 1],
+    outputRange: [0, -6, 0],
+  });
+
+  return (
+    <View style={{ width: setWidth, height: setHeight }}>
+      <Animated.View
+        style={{
+          transform: [{ translateY }],
+        }}
+      >
+        <View
+          style={{
+            width: 6,
+            height: 6,
+            borderRadius: 3,
+            backgroundColor: setColor,
+            marginHorizontal: 2,
+          }}
+        />
+        <View
+          style={{
+            width: 6,
+            height: 6,
+            borderRadius: 3,
+            backgroundColor: setColor,
+            marginHorizontal: 2,
+          }}
+        />
+        <View
+          style={{
+            width: 6,
+            height: 6,
+            borderRadius: 3,
+            backgroundColor: setColor,
+            marginHorizontal: 2,
+          }}
+        />
+      </Animated.View>
+    </View>
+  );
+};
+
+export default Loading3Dot;

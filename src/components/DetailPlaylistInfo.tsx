@@ -1,119 +1,166 @@
-import React from "react"
-import { Link } from "react-router-dom"
-import IconPlay from "./Icons/Play"
-import IconHeart from "./Icons/Heart"
-
-interface detailPlaylistInfoProps {
-  thumbnailM: string
-  title: string
-  artists: []
-  total: string
-  description: string
-  like: number
-  contentLastUpdate: number
+import React from "react";
+import { View, Text, Image, StyleSheet } from "react-native";
+import { TouchableOpacity } from "react-native-gesture-handler";
+import IconPlay from "./Icons/Play";
+import IconHeart from "./Icons/Heart";
+import colors from "../assets/colors";
+import Icon from "react-native-vector-icons/FontAwesome";
+interface DetailPlaylistInfoProps {
+  thumbnailM: string;
+  title: string;
+  artists: { alias: string; name: string }[];
+  total: string;
+  description: string;
+  like: number;
+  contentLastUpdate: number;
 }
 
-const PlaylistInfo:React.FC<detailPlaylistInfoProps> = ({ thumbnailM, title, artists, total, description, like, contentLastUpdate }) => {
-
-  const playlistLastUpdate =  (new Date(contentLastUpdate*1000)).toLocaleDateString("vi-VN")
-
-  const styleButton = "flex justify-center items-center rounded-lg py-2 px-4 w-auto h-10 min-h-[40px] transition duration-300 hover:scale-105 mr-4"
-
+const DetailPlaylistInfo: React.FC<DetailPlaylistInfoProps> = ({
+  thumbnailM,
+  title,
+  artists,
+  total,
+  description,
+  like,
+  contentLastUpdate,
+}) => {
+  const playlistLastUpdate = new Date(contentLastUpdate * 1000).toLocaleDateString("vi-VN");
   return (
-    <div className="flex mb-[72px]">
+    <View style={{ marginBottom: 72 }}>
       {/* Thumbnail */}
-      <div className="relative min-w-[288px] min-h-[288px]">
-        <img
-          className="rounded-xl w-full h-full"
-          src={thumbnailM}
-          alt=""
-        />
-        {/* Image Blur */}
-        <div
-          className="absolute top-3 w-full h-full z-[-1] bg-cover rounded-xl blur-md scale-95"
-          style={{
-            backgroundImage: `url(${thumbnailM})`
-          }}
-        >
-        </div>
-        {/* End Image Blur */}
-      </div>
-      {/* End Thumbnail */}
-      <div className="flex flex-col justify-center ml-14">
-          {/* Title */}
-          <div className="text-4xl font-bold text-[color:var(--color-text)]">{title}</div>
-          {/* End Title */}
+      <View style={styles.thumbnailContainer}>
+        <Image style={styles.thumbnail} source={{ uri: thumbnailM }} />
+        <View style={styles.imageBlur} />
+      </View>
+      <View style={styles.infoContainer}>
+        <Text style={styles.title}>{title}</Text>
 
-          {/* List Artists Playlist */}
-          <div className="text-lg opacity-90 text-[color:var(--color-text)] mt-6">
-            Playlist by
-            <span> </span>
-            {
-              artists &&
-              artists.map((e:{alias: string, name: string}, i:number) => {
-                return (
-                  <span key={i}>
-                    {
-                      (i > 0) ? (<span>, </span>) : ("")
-                    }
-                    <Link
-                      className="hover:underline opacity-100 font-medium"
-                      to={`/artist/${e.alias}`}
-                    >
-                      {e.name}
-                    </Link>
-                  </span>
-                )
-              })
-            }
-          </div>
-          {/* End List Artists Playlist */}
+        {/* List Artists Playlist */}
+        <Text style={styles.artists}>
+          Playlist by{" "}
+          {artists.map((e, i) => (
+            <Text key={i}>
+              {i > 0 && ", "}
+              <Text style={styles.artistLink}>{e.name}</Text>
+            </Text>
+          ))}
+        </Text>
+        {/* End List Artists Playlist */}
 
-          {/* Total Song */}
-          <div className="flex items-center text-sm opacity-70 font-medium text-[color:var(--color-text)] mt-[2px]">
-            <span className="mr-3">
-              Updated at {playlistLastUpdate}
-            </span>
-            <span className="mr-3">
-              {total} Songs
-            </span>
-            <span className="flex items-center">
-              <IconHeart setColor="red" setWidth="16px" setHeight="16px" />
-              {like}
-            </span>
-          </div>
-          {/* End Total Song */}
+        {/* Total Song */}
+        <View style={styles.totalSong}>
+          <Text style={styles.updatedAt}>Updated at {playlistLastUpdate}</Text>
+          <Text>{total} Songs</Text>
+          <View style={styles.likeContainer}>
+            <Icon name="heart" size={16} color={colors.white} />
+            <Text>{like}</Text>
+          </View>
+        </View>
+        {/* End Total Song */}
 
-          {/* Description */}
-          <div
-            className="text-sm opacity-70 font-medium text-[color:var(--color-text)] mt-6"
-            style={{
-              maxWidth: "100%",
-              display: "-webkit-box",
-              WebkitBoxOrient: "vertical",
-              WebkitLineClamp: 3,
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-            }}
+        {/* Description */}
+        <Text style={styles.description} numberOfLines={3}>
+          {description}
+        </Text>
+        {/* End Description */}
+        {/* Button */}
+        <View style={styles.buttonContainer}>
+          {/* Play */}
+          <TouchableOpacity style={styles.button}>
+            <Icon name='play' size={16} color={colors.white} />
+            <Text style={styles.buttonText}>PLAY</Text>
+          </TouchableOpacity>
+        </View>
+        {/* End Button */}
+      </View>
+    </View>
+  );
+};
 
-          >
-            {description}
-          </div>
-          {/* End Description */}
-          {/* Button */}
-          <div className="flex">
-            {/* Play */}
-            <div className="flex mt-8">
-              <button className={`${styleButton} bg-[color:var(--color-primary-bg)] text-[color:var(--color-primary)]`}>
-                <IconPlay setColor="var(--color-primary)" setWidth="16px" setHeight="16px" />
-                <span className="ml-2 text-lg font-semibold">PLAY</span>
-              </button>
-            </div>
-          </div>
-          {/* End Button */}
-      </div>
-    </div>
-  )
-}
+const styles = StyleSheet.create({
+  thumbnailContainer: {
+    position: "relative",
+    minWidth: 288,
+    minHeight: 288,
+  },
+  thumbnail: {
+    borderRadius: 10,
+    width: "100%",
+    minHeight: 288,
+  },
+  imageBlur: {
+    position: "absolute",
+    top: 3,
+    width: "100%",
+    height: "100%",
+    zIndex: -1,
+    borderRadius: 10,
+    transform: [{ scale: 0.95 }],
+  },
+  infoContainer: {
+    flex: 1,
+    marginLeft: 14,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: "bold",
+    color: colors.white,
+  },
+  artists: {
+    fontSize: 16,
+    opacity: 0.9,
+    color: colors.white,
+    marginTop: 6,
+  },
+  artistLink: {
+    textDecorationLine: "underline",
+    opacity: 1,
+    fontWeight: "bold",
+  },
+  totalSong: {
+    flexDirection: "row",
+    alignItems: "center",
+    fontSize: 12,
+    opacity: 0.7,
+    color: colors.white,
+    marginTop: 2,
+  },
+  updatedAt: {
+    marginRight: 3,
+  },
+  likeContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  description: {
+    fontSize: 12,
+    opacity: 0.7,
+    color: colors.white,
+    marginTop: 6,
+    maxWidth: "100%",
+  },
+  buttonContainer: {
+    flex: 1,
+    marginTop: 8,
+  },
+  button: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 10,
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    minWidth: 100,
+    height: 40,
+    backgroundColor: colors.dark,
+  },
+  buttonText: {
+    marginLeft: 8,
+    fontSize: 16,
+    fontWeight: "bold",
+    color: colors.white,
+  }
+  
+});
 
-export default PlaylistInfo
+export default DetailPlaylistInfo;

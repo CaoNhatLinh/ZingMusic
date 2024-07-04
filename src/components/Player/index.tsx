@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from "react"
+import { View } from "react-native"
 import Controls from "./Control"
 import { getSong, getInfoSong } from "../../api/song"
 import { useAppSelector, useAppDispatch } from "../../hooks/redux"
@@ -11,6 +12,7 @@ import {
 } from "../../redux/features/audioSlice"
 import { setSongId, setCurrnetIndexPlaylist } from "../../redux/features/audioSlice"
 import Lyric from "./Lyric"
+import colors from "../../assets/colors"
 //
 interface songType {
   [key: number]: string
@@ -33,7 +35,7 @@ const Player:React.FC = () => {
 
   const dispatch = useAppDispatch()
 
-  const audioRef = useRef<HTMLAudioElement | null>(null)
+  const audioRef = useRef<any>(null)
 
   useEffect(() => {
     (
@@ -67,17 +69,18 @@ const Player:React.FC = () => {
         {
           songId
           ?
-          <div className="flex flex-col justify-around h-16 backdrop-saturate-[180%] backdrop-blur-[30px] bg-[color:var(--color-navbar-bg)] fixed inset-x-0 bottom-0 z-[100]">
+          <View style={{flexDirection: 'column', justifyContent: 'space-around', height: 16, backgroundColor: colors.dark, position: 'fixed', left: 0, right: 0, bottom: 0, zIndex: 100}}>
             <Controls auRef={audioRef.current} />
-          </div>
+          </View>
           :
-          ""
+          null
         }
 
-      <audio
+      {/* Replace the audio element with the appropriate Audio component */}
+      <Audio
         ref={audioRef}
-        src={srcAudio}
-        className="hidden"
+        source={{uri: srcAudio}}
+        style={{display: 'none'}}
         loop={isLoop}
         autoPlay={true}
         hidden
@@ -89,6 +92,7 @@ const Player:React.FC = () => {
             }
           }
         }
+        
         onLoadedData = {() => {
             if(audioRef.current) {
               dispath(setDuration(
