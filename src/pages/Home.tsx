@@ -14,12 +14,11 @@ interface typePlaylistCover{
   sectionId: string
 }
 
-const Home: React.FC = () => {
-  const navigate = useNavigation()
+const Home: React.FC = ({ navigation }:any) => {
   const [dataHome, setdataHome] = useState<Array<object> | undefined>()
-  const handleClickPlaylist = ({ playlistId }: { playlistId: string }) => {
+  const handleClickPlaylist = ({ playlistId ,name}: { playlistId: string,name:string }) => {
     console.log(playlistId)
-    navigate.navigate('DetailPlaylist', { playlistId })
+    navigation.navigate( 'DetailPlaylist', {  playlistId,name})
   }
   useEffect(() => {
     (
@@ -51,7 +50,7 @@ return (
                                   title={element.title}
                                   thumbnail={element.thumbnail}
                                   sortDescription={element.sortDescription}
-                                  handleClickPlaylist={() => handleClickPlaylist({ playlistId: element.encodeId })}
+                                  handleClickPlaylist={() => handleClickPlaylist({ playlistId: element.encodeId, name: element.title})}
                                 />
                               ))
                             }
