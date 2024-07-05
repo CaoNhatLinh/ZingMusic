@@ -22,7 +22,8 @@ interface playlistType {
   };
 }
 
-const Playlist: React.FC = () => {
+const Playlist: React.FC = ({navigation}:any) => {
+ 
   const [dataDetailPlaylist, setDataDetailPlaylist] = useState<playlistType>();
   const route = useRoute();
   const dispatch = useAppDispatch();
@@ -42,7 +43,7 @@ const Playlist: React.FC = () => {
   return (
     <>
       {/* {console.log(dataDetailPlaylist)} */}
-      <View style={{   marginTop: 16, marginBottom: 24,backgroundColor:colors.black }}>
+      <View style={{  marginBottom: 24,backgroundColor:colors.black }}>
       <ScrollView>
         {dataDetailPlaylist ? (
           <>
@@ -57,7 +58,10 @@ const Playlist: React.FC = () => {
               contentLastUpdate={dataDetailPlaylist.contentLastUpdate}
             />
             </View>
-            <TrackListDetailPlaylist items={dataDetailPlaylist.song.items} />
+            <TrackListDetailPlaylist  
+            items={dataDetailPlaylist.song.items} 
+            
+            />
           </>
         ) 
         : (

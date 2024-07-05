@@ -2,7 +2,6 @@ import { DefaultTheme, NavigationContainer } from "@react-navigation/native"
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Icon from 'react-native-vector-icons/FontAwesome';
-import LoginScreen from '../features/auth/LoginScreen';
 import Home from "../pages/Home";
 // import Top100 from "../pages/Top100";
 import DetailPlaylist from "../pages/DetailPlaylist";
@@ -13,6 +12,7 @@ import DetailPlaylist from "../pages/DetailPlaylist";
 // import DetailMV from "../pages/DetailMV";
 import { TestScreen } from "../pages/pagtest";
 import colors from "../assets/colors";
+import SongSreen from "../pages/PlaySong";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -20,7 +20,7 @@ const MyTheme = {
     ...DefaultTheme,
     colors: {
         ...DefaultTheme.colors,
-        background: colors.black,
+        background: colors.white,
     },
 };
 export const AppNavigation = () => {
@@ -37,24 +37,20 @@ export const AppNavigation = () => {
                         color: 'white'
                     }
                 }}
-            >
+            > 
                 <Stack.Screen name="inapp" component={InappNavigation} options={{ headerShown: false }} />
                 <Stack.Screen name="DetailPlaylist"
                     component={DetailPlaylist}
+                    options={({ route }: { route: { params?: { name?: string } } }) => ({ title: route.params?.name, headerShown: true })} />
+                <Stack.Screen name="SongSreen"
+                    component={SongSreen}
                     options={({ route }: { route: { params?: { name?: string } } }) => ({ title: route.params?.name, headerShown: true })} />
             </Stack.Navigator>
         </NavigationContainer>
     );
 }
 
-const AuthNavigation = () => {
-    return (
 
-        <Stack.Navigator >
-            <Stack.Screen name="Login" component={LoginScreen} />
-        </Stack.Navigator>
-    );
-}
 
 const InappNavigation = () => {
     return (

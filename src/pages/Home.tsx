@@ -17,11 +17,11 @@ interface typePlaylistCover{
 const Home: React.FC = ({ navigation }:any) => {
   const [dataHome, setdataHome] = useState<Array<object> | undefined>()
   const handleClickPlaylist = ({ playlistId ,name}: { playlistId: string,name:string }) => {
-    console.log(playlistId)
     navigation.navigate( 'DetailPlaylist', {  playlistId,name})
   }
   useEffect(() => {
     (
+      
       async () => {
         setdataHome(await getHomePlayList())
       }

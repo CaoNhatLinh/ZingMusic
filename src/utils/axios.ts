@@ -1,7 +1,7 @@
 import axios from "axios"
 
 const instance = axios.create({
-  baseURL: "https://music-api-3ptc.onrender.com/api"
+  baseURL: "http://192.168.1.5:3000/api"
 })
 
 // custom response

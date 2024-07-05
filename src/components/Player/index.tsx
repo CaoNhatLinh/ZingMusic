@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from "react"
-import { View } from "react-native"
+import { Text, View } from "react-native"
 import Controls from "./Control"
+
 import { getSong, getInfoSong } from "../../api/song"
 import { useAppSelector, useAppDispatch } from "../../hooks/redux"
 import {
@@ -13,6 +14,7 @@ import {
 import { setSongId, setCurrnetIndexPlaylist } from "../../redux/features/audioSlice"
 import Lyric from "./Lyric"
 import colors from "../../assets/colors"
+import { useRoute } from "@react-navigation/native"
 //
 interface songType {
   [key: number]: string
@@ -25,7 +27,9 @@ interface songType {
 
 const Player:React.FC = () => {
 
-  const songId = useAppSelector((state) => state.audio.songId)
+  const route = useRoute()
+
+  const songId = (route.params as { encodeId?: string })?.encodeId ?? ""
   const srcAudio = useAppSelector((state) => state.audio.srcAudio)
   const isLoop = useAppSelector((state) => state.audio.isLoop)
   const dispath = useAppDispatch()
@@ -46,7 +50,7 @@ const Player:React.FC = () => {
           } else {
             const linkSong:songType = await getSong(songId)
             linkSong[128] ? dispath(setSrcAudio( linkSong[128] )) : dispath(setSrcAudio(""))
-
+           
             const infoSong:songType = await getInfoSong(songId)
             dispath(setInfoSongPlayer(
               {
@@ -65,19 +69,20 @@ const Player:React.FC = () => {
   }, [songId, dispath])
 
   return (
-    <>
+    <View>
+        
         {
           songId
           ?
-          <View style={{flexDirection: 'column', justifyContent: 'space-around', height: 16, backgroundColor: colors.dark, position: 'fixed', left: 0, right: 0, bottom: 0, zIndex: 100}}>
-            <Controls auRef={audioRef.current} />
+          <View style={{flexDirection: 'column', justifyContent: 'space-around', height: 16, backgroundColor: colors.white, position: 'fixed', left: 0, right: 0, bottom: 0, zIndex: 100}}>
+            <Text>{link}</Text>
           </View>
           :
           null
         }
 
       {/* Replace the audio element with the appropriate Audio component */}
-      <Audio
+      {/* <Audio
         ref={audioRef}
         source={{uri: srcAudio}}
         style={{display: 'none'}}
@@ -128,11 +133,11 @@ const Player:React.FC = () => {
 
           }
         }}
-      />
+      /> */}
+{/* 
+      <Lyric auRef={audioRef.current}/> */}
 
-      <Lyric auRef={audioRef.current}/>
-
-    </>
+    </View>
   )
 }
 

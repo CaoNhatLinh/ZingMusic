@@ -53,17 +53,14 @@ const DetailPlaylistInfo: React.FC<DetailPlaylistInfoProps> = ({
           <Text>{total} Songs</Text>
           <View style={styles.likeContainer}>
             <Icon name="heart" size={16} color={colors.white} />
-            <Text>{like}</Text>
+            <Text style={{color: colors.white}}>{like}</Text>
           </View>
         </View>
-        {/* End Total Song */}
-
-        {/* Description */}
+     
         <Text style={styles.description} numberOfLines={3}>
           {description}
         </Text>
-        {/* End Description */}
-        {/* Button */}
+      
         <View style={styles.buttonContainer}>
           {/* Play */}
           <TouchableOpacity style={styles.button}>
@@ -127,10 +124,12 @@ const styles = StyleSheet.create({
   },
   updatedAt: {
     marginRight: 3,
+    color: colors.white,
   },
   likeContainer: {
     flexDirection: "row",
     alignItems: "center",
+    
   },
   description: {
     fontSize: 12,

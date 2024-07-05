@@ -4,6 +4,7 @@ import { formatTime } from "../utils/formatTime";
 import { useAppDispatch, useAppSelector } from "../hooks/redux"
 import { setSongId, changeIconPlay, setAutoPlay, setCurrnetIndexPlaylist } from "../redux/features/audioSlice";
 import colors from "../assets/colors";
+import { useNavigation } from "@react-navigation/native";
 
 interface typeTrackListDetailPlaylist {
   streamingStatus: number;
@@ -17,13 +18,14 @@ interface typeTrackListDetailPlaylist {
 const TrackListDetailPlaylist: React.FC<{ items: [] }> = ({ items }) => {
   const currnetIndexPlaylist = useAppSelector((state) => state.audio?state.audio.currnetIndexPlaylist:0);
   const dispatch = useAppDispatch()
-
+  const navigation = useNavigation();
   const handleClickPlaySong = (streamingStatus: number, encodeId: string, currentIndex: number): void => {
     if (streamingStatus === 1) {
-      dispatch(setSongId(encodeId));
+     
       dispatch(setCurrnetIndexPlaylist(currentIndex));
       dispatch(changeIconPlay(true));
       dispatch(setAutoPlay(true));
+      navigation.navigate('SongSreen', { encodeId });
     }
   };
 

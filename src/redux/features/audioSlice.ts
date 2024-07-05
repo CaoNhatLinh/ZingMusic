@@ -54,7 +54,9 @@ const audioSlice = createSlice({
       state.isMute = action.payload;
     },
     setSongId: (state, action: PayloadAction<string>) => {
+      
       state.songId = action.payload;
+     
     },
     setInfoSongPlayer: (state, action: PayloadAction<object>) => {
       state.infoSongPlayer = {
