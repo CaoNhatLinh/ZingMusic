@@ -21,6 +21,7 @@ interface songType {
   title: string
   infoSong: string
   thumbnail: string
+  thumbnailM: string
   artistsNames: string
   artists: []
 }
@@ -56,6 +57,7 @@ const Player:React.FC = () => {
               {
                 title: infoSong.title,
                 thumbnail: infoSong.thumbnail,
+                thumbnailM: infoSong.thumbnailM,
                 artistsNames: infoSong.artistsNames,
                 artists: infoSong.artists,
               }
@@ -74,8 +76,8 @@ const Player:React.FC = () => {
         {
           songId
           ?
-          <View style={{flexDirection: 'column', justifyContent: 'space-around', height: 16, backgroundColor: colors.white, position: 'fixed', left: 0, right: 0, bottom: 0, zIndex: 100}}>
-            <Text>{link}</Text>
+          <View>
+             <Controls auRef={audioRef.current} />
           </View>
           :
           null

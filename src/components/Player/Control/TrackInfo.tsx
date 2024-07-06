@@ -1,48 +1,61 @@
-import React from "react"
-import { useAppSelector } from "../../../hooks/redux"
-import { Link } from "react-router-dom"
-
+import React from "react";
+import { Image, StyleSheet, Text, View } from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import { useAppSelector } from "../../../hooks/redux";
+import colors from "../../../assets/colors";
+import { Dimensions } from 'react-native';
+import Icon from "react-native-vector-icons/FontAwesome";
+import ImgArtfrom from "./imgArt"
+import ImgArt from "./imgArt";
 const TrackInfo: React.FC = () => {
+  const info = useAppSelector((state) => state.audio.infoSongPlayer);
+  const navigation = useNavigation();
+  const win = Dimensions.get('window');
+  const layout = win.height * 40 / 100;
+  const ratio = win.width;
+  const sizeImg = 70 * ratio / 100;
+  const styles = StyleSheet.create({
+    imgArt: {
+      height: sizeImg,
+      width: sizeImg,
+      borderRadius: 9999999
+    }
+  });
 
-  const info = useAppSelector((state) => state.audio.infoSongPlayer)
+  return (
+    <>
+      <View style={{ flexDirection: "column", alignItems: "center" }}>
+        <ImgArt  />
+        <View style={{ height: win.height * 15 / 100, flexDirection: "row", alignItems: "center", justifyContent: "space-between", width: win.width, paddingHorizontal: 20 }}>
+          <Icon name="share" size={20} color="#FFF" />
+          <View style={{ flexDirection: "column", alignItems: "center" }}>
+            <Text
+              style={{
+                fontSize: 20,
+                color: colors.white,
+                opacity: 0.9,
+                marginBottom: 1,
+              }}
+            >
+              {info.title}
+            </Text>
+            {info.artists &&
+              info.artists.map((e: any, i: number) => (
+                <React.Fragment key={i}>
+                  <Text
+                    style={{ color: colors.white, fontSize: 12, opacity: 0.6, textDecorationLine: "underline" }}
+                  // onPress={() => navigation.navigate("Artist", { alias: e.alias })}
+                  >
+                    {e.name}
+                  </Text>
+                </React.Fragment>
+              ))}
+          </View>
+          <Icon name="heart" size={20} color="#FFF" />
+        </View>
+      </View>
+    </>
+  );
+};
 
-  return(
-    <div className="flex items-center">
-      {/* Thumbnail */}
-      <img
-        src={info.thumbnail}
-        alt={info.title}
-        className="h-[46px] rounded-[5px]"
-      />
-      {/* End Thumbnail */}
-
-      {/* Info */}
-      <div className="flex flex-col justify-center h-[46px] ml-3">
-        <div className="font-semibold text-base text-[color:var(--color-text)] opacity-90 mb-1 truncate cursor-default">{info.title}</div>
-        <div className="flex text-[color:var(--color-text)] text-xs opacity-60">
-        {
-          info.artists &&
-          info.artists.map((e:any, i:number) => {
-            return (
-              <span key={i}>
-                {
-                  (i > 0) ? (<span>, </span>) : ("")
-                }
-                <Link
-                  className="hover:underline"
-                  to={`/artist/${e.alias}`}
-                >
-                  {e.name}
-                </Link>
-              </span>
-            )
-          })
-        }
-        </div>
-      </div>
-      {/* End Info */}
-    </div>
-  )
-}
-
-export default TrackInfo
+export default TrackInfo;

@@ -2,7 +2,7 @@ import React from "react";
 import { View, Text, Image, TouchableOpacity, ScrollView } from "react-native";
 import { formatTime } from "../utils/formatTime";
 import { useAppDispatch, useAppSelector } from "../hooks/redux"
-import { setSongId, changeIconPlay, setAutoPlay, setCurrnetIndexPlaylist } from "../redux/features/audioSlice";
+import { changeIconPlay, setAutoPlay, setCurrnetIndexPlaylist, setInfoSongPlayer } from "../redux/features/audioSlice";
 import colors from "../assets/colors";
 import { useNavigation } from "@react-navigation/native";
 
@@ -10,23 +10,23 @@ interface typeTrackListDetailPlaylist {
   streamingStatus: number;
   encodeId: string;
   thumbnail: string;
+  thumbnailM: string;
   title: string;
   artists: [];
   duration: number;
 }
 
 const TrackListDetailPlaylist: React.FC<{ items: [] }> = ({ items }) => {
-  const currnetIndexPlaylist = useAppSelector((state) => state.audio?state.audio.currnetIndexPlaylist:0);
+  const currnetIndexPlaylist = useAppSelector((state) => state.audio?state.audio.currnetIndexPlaylist:null);
   const dispatch = useAppDispatch()
   const navigation = useNavigation();
   const handleClickPlaySong = (streamingStatus: number, encodeId: string, currentIndex: number): void => {
     if (streamingStatus === 1) {
-     
       dispatch(setCurrnetIndexPlaylist(currentIndex));
       dispatch(changeIconPlay(true));
       dispatch(setAutoPlay(true));
       navigation.navigate('SongSreen', { encodeId });
-    }
+    } 
   };
 
   return (
@@ -58,15 +58,11 @@ const TrackListDetailPlaylist: React.FC<{ items: [] }> = ({ items }) => {
               //   handleClickPlaySong(e.streamingStatus, e.encodeId, i);
               // }}
             />
+            
             {/* End Thumbnail */}
             {/* Title & Artist */}
             <View style={{ flex: 1 }}>
               {/* Title */}
-              <TouchableOpacity
-                onPress={() => {
-                  handleClickPlaySong(e.streamingStatus, e.encodeId, i);
-                }}
-              >
                 <Text
                   style={{
                     fontSize: 16,
@@ -77,7 +73,7 @@ const TrackListDetailPlaylist: React.FC<{ items: [] }> = ({ items }) => {
                 >
                   {e.title}
                 </Text>
-              </TouchableOpacity>
+              
               {/* Artist */}
               <Text
                 style={{

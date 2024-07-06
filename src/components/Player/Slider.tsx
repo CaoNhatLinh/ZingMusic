@@ -1,165 +1,152 @@
-import React, { useState, useRef } from "react"
-import { formatTime } from "../../utils/formatTime"
+import React, { useState, useRef } from "react";
+import { formatTime } from "../../utils/formatTime";
+import { View, StyleSheet, PanResponder, Animated, Text } from "react-native";
 
-interface sliderProps {
-  setWidth: string
-  setHeight: string
-  percentSlider: number
-  getPercentSlider: Function
-  toogleTooltip: boolean
-  currentTimeSongTooltip?: number
+interface SliderProps {
+  setWidth: number;
+  setHeight: number;
+  percentSlider: number;
+  getPercentSlider: Function;
+  toogleTooltip: boolean;
+  currentTimeSongTooltip?: number;
 }
 
-const Slider: React.FC<sliderProps> = ({ setWidth, setHeight, percentSlider, getPercentSlider, toogleTooltip, currentTimeSongTooltip }) => {
+const Slider: React.FC<SliderProps> = ({
+  setWidth,
+  setHeight,
+  percentSlider,
+  getPercentSlider,
+  toogleTooltip,
+  currentTimeSongTooltip,
+}) => {
+  const sliderRef = useRef<View>(null);
+  const [isActiveSliderDotHover, setActiveSliderDotHover] = useState<boolean>(false);
+  const [isActiveSliderTooltipHover, setActiveSliderTooltipHover] = useState<boolean>(false);
 
-  const sliderRef = useRef<HTMLDivElement>(null)
-
-  // Active UI Dot Slider Hover
-  const [isActiveSliderDotHover, setActiveSliderDotHover] = useState<boolean>(false)
-
-  // Active UI Tooltip Dot Hover
-  const [isActiveSliderTooltipHover, setActiveSliderTooltipHover] = useState<boolean>(false)
-
-  // Handler Active Dot Slider Hover
   const handleActiveSliderDotHover = (handle: boolean) => {
-    setActiveSliderDotHover(handle)
-  }
+    setActiveSliderDotHover(handle);
+  };
 
-  // Handler Active Tooltip Dot Hover
   const handleActiveSliderTooltipHover = (handle: boolean) => {
-    setActiveSliderTooltipHover(handle)
-  }
+    setActiveSliderTooltipHover(handle);
+  };
+
+  const panResponder = useRef(
+    PanResponder.create({
+      onStartShouldSetPanResponder: () => true,
+      onPanResponderMove: (e, gestureState) => {
+        if (sliderRef.current) {
+          const percentSliderWidth =
+            (gestureState.moveX - sliderRef.current.measureInWindow((x, y, width, height) => {}).left) /
+            sliderRef.current.measureInWindow((x, y, width, height) => {}).width;
+
+          getPercentSlider(percentSliderWidth * 100);
+        }
+      },
+    })
+  ).current;
 
   return (
-    // Slider Bar
-    // w-full || w-[84px]
-    <div
-      className="my-[-6px] cursor-pointer"
-      style={{
-        width: `${setWidth}`
-      }}
-    >
-      {/* Slider Bar Progress */}
-      <div
-        className="py-[6px] px-0"
-        onMouseOver={() => handleActiveSliderDotHover(true)}
-        onMouseOut={() => handleActiveSliderDotHover(false)}
+    <View style={[styles.container, { width: setWidth }]}>
+      <View
+        style={[styles.sliderBar, { height: setHeight }]}
+        {...panResponder.panHandlers}
         ref={sliderRef}
-        onMouseDown={(e) => {
-          // console.log("Mouse Down")
-
-          /*
-            |-------------------|------|----------------|------|
-            ^                   ^      ^                ^
-            |<--Bounding Left-->|      |                |
-            |<-----------clientX------>|                |
-            |<-------------Slider Offset Width--------->|
-          */
-
-          if(sliderRef.current) {
-
-            let percentSliderWidth  = (
-              (e.clientX - sliderRef.current.getBoundingClientRect().left)
-                / sliderRef.current.offsetWidth
-            ) * 100
-
-            percentSliderWidth = percentSliderWidth < 0
-              ? 0
-              : percentSliderWidth > 100
-              ? 100
-              : percentSliderWidth
-
-            getPercentSlider(percentSliderWidth)
-          }
-
-          const handleMouseMove = (e: MouseEvent) => {
-            // console.log("Mouse Move")
-            if(sliderRef.current) {
-              let percentSliderWidth  = (
-                  (e.clientX - sliderRef.current.getBoundingClientRect().left)
-                    / sliderRef.current.offsetWidth
-              ) * 100
-
-              percentSliderWidth = percentSliderWidth < 0
-                ? 0
-                : percentSliderWidth > 100
-                ? 100
-                : percentSliderWidth
-
-              getPercentSlider(percentSliderWidth)
-            }
-          }
-
-          // Add Event Mouse Move
-          window.addEventListener("mousemove", handleMouseMove)
-
-          // Add Event Mouse Up
-          window.addEventListener(
-            "mouseup",
-            () => {
-            // Remove Event Mouse Move
-              window.removeEventListener("mousemove", handleMouseMove)
-            }
-          )
-        }}
       >
-        {/* Slider Bar Rail */}
-        <div
-          className="relative w-full transition-[width,left] duration-300 bg-[hsla(0,0%,50.2%,.18)] rounded-[15px]"
-          style={{
-            height: `${setHeight}`
-          }}
-        >
-          {/* React Slider Progress
-            * Change Slider Progress -> width: 23%
-          */}
-          <div
-            className="top-0 left-[0%] absolute z-[1] bg-[#335eea] rounded-[15px]"
-            style={{
-              width: `${percentSlider}%`,
-              height: `${setHeight}`
-            }}
-          ></div>
-          {/* End React Slider Process  */}
-
-          {/* React Slider Dot
-            * Change Slider Dot -> left: 23%
-          */}
-          <div
-            className="absolute z-[5] w-3 h-3 top-[50%] translate-x-[-50%] translate-y-[-50%] transition-[left]"
-            style={{
-              left: `${percentSlider}%`
-            }}
+        <View style={[styles.sliderBarRail, { height: setHeight }]}>
+          <Animated.View
+            style={[
+              styles.sliderProgress,
+              { width: `${percentSlider}%`, height: setHeight },
+            ]}
+          ></Animated.View>
+          <Animated.View
+            style={[
+              styles.sliderDot,
+              { left: `${percentSlider}%` },
+            ]}
           >
-            {/* Dot Handle */}
-            <div
-              className={"cursor-pointer w-full h-full rounded-full bg-[#fff] box-border " +
-                (isActiveSliderDotHover ? "visible": "invisible")
-              }
-              onMouseOver={() => handleActiveSliderTooltipHover(true)}
-              onMouseOut={() => handleActiveSliderTooltipHover(false)}
-            >
-            </div>
-            {/* End Dot Handle */}
-            {
-              // Dot Tooltip
-              toogleTooltip &&
-              <div className={"top-[-10px] left-1/2 -translate-x-1/2 -translate-y-full absolute " +(isActiveSliderTooltipHover ? "visible" : "invisible")}>
-                <div className="text-sm font-medium whitespace-nowrap px-[6px] py-[2px] min-w-[20px] text-center text-[#000] rounded-[5px] bg-[#fff] box-content">
-                  <span>{formatTime(currentTimeSongTooltip || 0)}</span>
-                </div>
-              </div>
-              // End Dot Tooltip
-            }
-          </div>
-          {/* End React Slider Dot */}
-        </div>
-        {/* End Slider Bar Rail */}
-      </div>
-      {/* End Slider Bar Progress */}
-    </div>
-    // End Slider Bar
-  )
-}
+            <View
+              style={[
+                styles.dotHandle,
+                isActiveSliderDotHover ? styles.visible : styles.invisible,
+              ]}
+              onTouchStart={() => handleActiveSliderTooltipHover(true)}
+              onTouchEnd={() => handleActiveSliderTooltipHover(false)}
+            ></View>
+            {toogleTooltip && (
+              <View
+                style={[
+                  styles.dotTooltip,
+                  isActiveSliderTooltipHover ? styles.visible : styles.invisible,
+                ]}
+              >
+                <View style={styles.tooltipContent}>
+                  <Text>{formatTime(currentTimeSongTooltip || 0)}</Text>
+                </View>
+              </View>
+            )}
+          </Animated.View>
+        </View>
+      </View>
+    </View>
+  );
+};
 
-export default Slider
+const styles = StyleSheet.create({
+  container: {
+    marginVertical: -6,
+    alignItems: "center",
+  },
+  sliderBar: {
+    paddingVertical: 6,
+  },
+  sliderBarRail: {
+    position: "relative",
+    width: "100%",
+    backgroundColor: "hsla(0,0%,50.2%,.18)",
+    borderRadius: 15,
+  },
+  sliderProgress: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    zIndex: 1,
+    backgroundColor: "#335eea",
+    borderRadius: 15,
+  },
+  sliderDot: {
+    position: "absolute",
+    zIndex: 5,
+    width: 3,
+    height: 3,
+    top: "50%",
+    transform: [{ translateX: -50 }, { translateY: -50 }],
+    transitionProperty: "left",
+  },
+  dotHandle: {
+    width: "100%",
+    height: "100%",
+    borderRadius: 50,
+    backgroundColor: "#fff",
+  },
+  dotTooltip: {
+   
+  },
+  tooltipContent: {
+    minWidth: 20,
+    padding: 2,
+    textAlign: "center",
+    color: "#000",
+    borderRadius: 5,
+    backgroundColor: "#fff",
+  },
+  visible: {
+    backfaceVisibility: "visible",
+  },
+  invisible: {
+    backfaceVisibility: "hidden",
+  },
+});
+
+export default Slider;

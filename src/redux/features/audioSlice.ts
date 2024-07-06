@@ -8,6 +8,7 @@ interface AudioState {
   infoSongPlayer: {
     title: string;
     thumbnail: string;
+    thumbnailM: string;
     artistsNames: string;
     artists: Array<object>;
   };
@@ -29,6 +30,7 @@ const initialState: AudioState = {
   infoSongPlayer: {
     title: "",
     thumbnail: "",
+    thumbnailM: "",
     artistsNames: "",
     artists: [],
   },

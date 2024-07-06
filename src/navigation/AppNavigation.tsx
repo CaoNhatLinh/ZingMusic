@@ -20,7 +20,8 @@ const MyTheme = {
     ...DefaultTheme,
     colors: {
         ...DefaultTheme.colors,
-        background: colors.white,
+        background: colors.black,
+        text: colors.white,
     },
 };
 export const AppNavigation = () => {
@@ -44,7 +45,7 @@ export const AppNavigation = () => {
                     options={({ route }: { route: { params?: { name?: string } } }) => ({ title: route.params?.name, headerShown: true })} />
                 <Stack.Screen name="SongSreen"
                     component={SongSreen}
-                    options={({ route }: { route: { params?: { name?: string } } }) => ({ title: route.params?.name, headerShown: true })} />
+                    options={({ route }: { route: { params?: { name?: string } } }) => ({ title: route.params?.name, headerShown: false })} />
             </Stack.Navigator>
         </NavigationContainer>
     );

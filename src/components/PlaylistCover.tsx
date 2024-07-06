@@ -1,6 +1,6 @@
 import React, { useState } from "react"
 import { Image, Text, TouchableOpacity, View,StyleSheet } from "react-native"
-import { useNavigation } from '@react-navigation/native'; // Import the useNavigation hook
+
 
 interface coverProps {
   title: string
@@ -41,13 +41,12 @@ const styles = StyleSheet.create({
 // Usage:
 const Cover: React.FC<coverProps> = ({ title, sortDescription, thumbnail ,handleClickPlaylist}) => {
 
-  const [isCoverHover, setCoverHover] = useState(false)
   return (
     <View>
       <TouchableOpacity onPress={handleClickPlaylist}>
       <View style={styles.roundedContainer}>
           <Image style={styles.thumbnail} source={{ uri: thumbnail }} alt={title} />
-        {isCoverHover && <View style={styles.imageBlur} />}
+      
       </View>
 
       <View style={styles.contentContainer}>

@@ -24,7 +24,6 @@ const SongSreen: React.FC = () => {
     return (
         <> 
             <View >
-              <Text> song</Text>
              <Player/>
             </View>
         </>

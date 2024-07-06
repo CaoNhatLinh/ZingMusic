@@ -1,8 +1,6 @@
 import React from "react";
 import { View, Text, Image, StyleSheet } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import IconPlay from "./Icons/Play";
-import IconHeart from "./Icons/Heart";
 import colors from "../assets/colors";
 import Icon from "react-native-vector-icons/FontAwesome";
 interface DetailPlaylistInfoProps {
