@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react"
+import React, { useEffect, useRef, useMemo, memo, useCallback } from "react"
 import { Text, View } from "react-native"
 import Controls from "./Control"
 import Sound from "react-native-sound"
@@ -15,6 +15,7 @@ import { setSongId, setCurrnetIndexPlaylist } from "../../redux/features/audioSl
 import Lyric from "./Lyric"
 import colors from "../../assets/colors"
 import { useRoute } from "@react-navigation/native"
+
 //
 interface songType {
   [key: number]: string
@@ -25,68 +26,129 @@ interface songType {
   artistsNames: string
   artists: []
 }
-var whoosh = new Sound('whoosh.mp3', Sound.MAIN_BUNDLE, (error) => {
-  if (error) {
-    console.log('failed to load the sound', error);
-    return;
-  }
-const Player:React.FC = () => {
+type AudioStatusType = 'loading' | 'success' | 'error' | 'play' | 'pause' | 'next' | 'previous' | 'stop';
+// function playSound(url:String) {
+//   const callback = (error:any, sound:Sound) => {
+//     sound.play(() => {
+//       sound.release();
+//     });
+//   };
+
+//     return new Sound(url, Sound.MAIN_BUNDLE, error => callback(error, sound));
+//   }
+
+
+const Player: React.FC = () => {
+
+
+  const [status, setStatus] = React.useState<AudioStatusType>('loading');
+  const [duration, setDuration] = React.useState(0);
+  const [errorMessage, setErrorMessage] = React.useState('');
+
 
   const route = useRoute()
-
-  const songId = (route.params as { encodeId?: string })?.encodeId ?? ""
-  const srcAudio = useAppSelector((state) => state.audio.srcAudio)
+  const isPlay = useAppSelector((state) => state.audio.isPlay)
+  const currnetIndexPlaylist = useAppSelector((state) => state.audio.currnetIndexPlaylist)
+  const playlistSong: any = useAppSelector((state) => state.audio.playlistSong)
+  
+  const audioRef = useRef<Sound | null>(null)
+  
   const isLoop = useAppSelector((state) => state.audio.isLoop)
   const dispath = useAppDispatch()
+  const songId = (route.params as { encodeId?: string })?.encodeId ?? ""
+  const currentSongId = useAppSelector((state) => state.audio.songId)
+  function stopAudio() {
+    if (audioRef.current) {
+      audioRef.current.stop();
+    }
+  }
+  function handleAudioAction(action: string, player: Sound) {
+    switch (action) {
+        case 'play':
+            player.play();
+            setStatus('play');
+            break;
+        case 'stop':
+            player.stop();
+            setStatus('stop');
+            break;
+        case 'pause':
+            player.pause();
+            setStatus('pause');
+            break;
+        
+        default:
+            break;
+    }
+}
+  function isUpdate(){
+    if (songId != currentSongId) {
 
-  const currnetIndexPlaylist = useAppSelector((state) => state.audio.currnetIndexPlaylist)
-  const playlistSong:any = useAppSelector((state) => state.audio.playlistSong)
- 
-  const dispatch = useAppDispatch()
-
-  const audioRef = useRef<any>(null)
-
+      dispath(setSongId(songId))
+      
+      return true
+    }
+    return false
+  }
+  
   useEffect(() => {
     (
+
       async () => {
         try {
-          if(songId === "") {
+          if (songId === "") {
             console.log("song id not found")
-          } else {
-            const linkSong:songType = await getSong(songId)
-            linkSong[128] ? dispath(setSrcAudio( linkSong[128] )) : dispath(setSrcAudio(""))
-           
-            const infoSong:songType = await getInfoSong(songId)
-            dispath(setInfoSongPlayer(
-              {
-                title: infoSong.title,
-                thumbnail: infoSong.thumbnail,
-                thumbnailM: infoSong.thumbnailM,
-                artistsNames: infoSong.artistsNames,
-                artists: infoSong.artists,
-              }
-            ))
           }
-        } catch(err) {
+          else {
+            if (isUpdate()) {
+              
+              const linkSong: songType = await getSong(songId)
+              linkSong[128] ? dispath(setSrcAudio(linkSong[128])) : dispath(setSrcAudio(""))
+              const infoSong: songType = await getInfoSong(songId)
+              dispath(setInfoSongPlayer(
+                {
+                  title: infoSong.title,
+                  thumbnail: infoSong.thumbnail,
+                  thumbnailM: infoSong.thumbnailM,
+                  artistsNames: infoSong.artistsNames,
+                  artists: infoSong.artists,
+                }
+              ))
+              
+              audioRef.current = new Sound(linkSong[128], Sound.MAIN_BUNDLE, (error) => {
+                if (error) {
+                  setStatus('error');
+                  setErrorMessage(error.message);
+                } else {
+                  setStatus('success');
+                  setErrorMessage('');
+                }
+                handleAudioAction('play', audioRef.current as Sound)
+              }
+            );
+            }
+          }
+        } catch (err) {
           console.log(err)
         }
       }
     )()
-  }, [songId, dispath])
-  
+  }, [dispath])
+
 
   return (
     <View>
-        
-        {
-          songId
+      {
+        songId
           ?
           <View>
-             <Controls auRef={audioRef.current} />
+            <Controls auRef={audioRef.current} />
           </View>
           :
           null
-        }
+
+      }
+
       {/* Replace the audio element with the appropriate Audio component */}
       {/* <Audio
         ref={audioRef}
@@ -140,7 +202,7 @@ const Player:React.FC = () => {
           }
         }}
       /> */}
-{/* 
+      {/* 
       <Lyric auRef={audioRef.current}/> */}
 
     </View>
@@ -148,3 +210,5 @@ const Player:React.FC = () => {
 }
 
 export default Player
+
+

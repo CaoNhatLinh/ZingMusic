@@ -32,11 +32,12 @@ const Control: React.FC<{ auRef: any | null }> = ({ auRef }) => {
 
         <TrackInfo />
         <SongSliderControl/>
+        
 
         <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
             {/* <PreviousControl /> */}
             <PlayControl auRef={auRef} />
-            {/* <NextControl /> */}
+            <NextControl />
           </View>
         {/* End Mid Controls Button */}
 

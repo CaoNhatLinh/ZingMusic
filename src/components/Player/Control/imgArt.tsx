@@ -15,13 +15,14 @@ const ImgArt =  () => {
   });
   const info = useAppSelector((state) => state.audio.infoSongPlayer);
   return (
-    
+        info.thumbnailM?
         <View style={{ height: win.height * 50 / 100, flexDirection: "row", alignItems: "center" ,justifyContent: "center"}}>
           <Image
             source={{ uri: info.thumbnailM }}
             style={styles.imgArt}
           />
         </View>
+        :null
   );
 };
 export default ImgArt;

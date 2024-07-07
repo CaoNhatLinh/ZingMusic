@@ -42,6 +42,7 @@ const initialState: AudioState = {
   autoPlay: false,
   playlistSong: [],
   isLyric: false,
+  
 };
 
 const audioSlice = createSlice({
@@ -93,6 +94,7 @@ const audioSlice = createSlice({
     setOpenLyric: (state, action: PayloadAction<boolean>) => {
       state.isLyric = action.payload;
     },
+    
   },
 });
 

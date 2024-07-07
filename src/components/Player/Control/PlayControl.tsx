@@ -1,8 +1,5 @@
 import React from "react";
 import { View, TouchableOpacity } from "react-native";
-import IconPlay from "../../Icons/Play";
-import IconPause from "../../Icons/Pause";
-import { useSelector, useDispatch } from "react-redux";
 import { changeIconPlay } from "../../../redux/features/audioSlice";
 import Sound from "react-native-sound";
 import { useAppDispatch, useAppSelector } from "../../../hooks/redux";
@@ -10,7 +7,6 @@ import Icon from "react-native-vector-icons/FontAwesome";
 const PlayControl: React.FC<{ auRef: Sound | null | undefined }> = ({ auRef }) => {
   const isPlay = useAppSelector((state) => state.audio.isPlay);
   const dispatch = useAppDispatch();
-
   const handlePlaySong = () => {
     if (isPlay === true) {
       dispatch(changeIconPlay(false));
