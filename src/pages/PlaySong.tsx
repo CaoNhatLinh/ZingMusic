@@ -1,6 +1,6 @@
 import { useRoute } from "@react-navigation/native";
 import React, { useEffect, useState } from "react"
-import { Text, View } from "react-native"
+import { Button, Text, View } from "react-native"
 import Player from "../components/Player";
 
 
@@ -8,9 +8,10 @@ const SongSreen: React.FC = () => {
     const [dataSong, setDataSong] = useState<any>()
 
     const route = useRoute();
+    
+
     useEffect(() => {
         (async () => {
-          
           const encodeId = (route.params as { encodeId?: string })?.encodeId ?? "";
           
           if (encodeId) {
@@ -24,7 +25,8 @@ const SongSreen: React.FC = () => {
     return (
         <> 
             <View >
-             <Player/>
+
+             <Player />
             </View>
         </>
     )
