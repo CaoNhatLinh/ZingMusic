@@ -25,7 +25,11 @@ interface songType {
   artistsNames: string
   artists: []
 }
-
+var whoosh = new Sound('whoosh.mp3', Sound.MAIN_BUNDLE, (error) => {
+  if (error) {
+    console.log('failed to load the sound', error);
+    return;
+  }
 const Player:React.FC = () => {
 
   const route = useRoute()
@@ -37,7 +41,7 @@ const Player:React.FC = () => {
 
   const currnetIndexPlaylist = useAppSelector((state) => state.audio.currnetIndexPlaylist)
   const playlistSong:any = useAppSelector((state) => state.audio.playlistSong)
-  
+ 
   const dispatch = useAppDispatch()
 
   const audioRef = useRef<any>(null)
