@@ -122,7 +122,7 @@ const styles = StyleSheet.create({
     height: 3,
     top: "50%",
     transform: [{ translateX: -50 }, { translateY: -50 }],
-    transitionProperty: "left",
+   
   },
   dotHandle: {
     width: "100%",

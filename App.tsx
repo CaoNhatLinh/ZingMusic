@@ -7,11 +7,10 @@ import { store } from './src/redux/store';
 
 const App = () => {
   return (
-    
+   
     <Provider store={store}>
         <AppNavigation />
     </Provider>
-   
   );
 };
 

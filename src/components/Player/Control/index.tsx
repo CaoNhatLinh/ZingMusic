@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useState } from "react"
 import LyricControl from "./LyricControl"
 import NextControl from "./NextControl"
 import PlayControl from "./PlayControl"
@@ -8,14 +8,15 @@ import ShuffleControl from "./ShuffleControl"
 import TrackInfo from "./TrackInfo"
 import VolumeControl from "./VolumeControl"
 import VolumeSliderControl from "./VolumeSliderControl"
-import SongSliderControl from "./SongSliderControl"
+
 import { Dimensions, Text, View   } from "react-native"
-import Slider from '@react-native-community/slider';
 import Header from "./header"
 import colors from "../../../assets/colors"
+import SongSliderControl from "./SongSliderControl"
 
 const win = Dimensions.get('window');
 const Control: React.FC<{ auRef: any | null }> = ({ auRef }) => {
+  
   return (
     <>
       {/* <SongSliderControl auRef={auRef} /> */}
@@ -30,19 +31,9 @@ const Control: React.FC<{ auRef: any | null }> = ({ auRef }) => {
         }} />
 
         <TrackInfo />
-        <View style={{ backgroundColor: colors.facebook }}>
-        <Slider
-                style={{ width: 200, height: 40 }}
-                minimumValue={0}
-                maximumValue={1}
-                minimumTrackTintColor="#FFFFFF"
-                maximumTrackTintColor="#000000"
-            />
-
-         
-        </View>
-        {/* Mid Controls Button */}
-
+        <SongSliderControl/>
+        
+     
 
         {/* <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
             <PreviousControl />

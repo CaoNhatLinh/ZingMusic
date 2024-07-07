@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from "react"
 import { Text, View } from "react-native"
 import Controls from "./Control"
-
+import Sound from "react-native-sound"
 import { getSong, getInfoSong } from "../../api/song"
 import { useAppSelector, useAppDispatch } from "../../hooks/redux"
 import {
@@ -37,7 +37,7 @@ const Player:React.FC = () => {
 
   const currnetIndexPlaylist = useAppSelector((state) => state.audio.currnetIndexPlaylist)
   const playlistSong:any = useAppSelector((state) => state.audio.playlistSong)
-
+  
   const dispatch = useAppDispatch()
 
   const audioRef = useRef<any>(null)
@@ -69,6 +69,7 @@ const Player:React.FC = () => {
       }
     )()
   }, [songId, dispath])
+  
 
   return (
     <View>
@@ -82,7 +83,6 @@ const Player:React.FC = () => {
           :
           null
         }
-
       {/* Replace the audio element with the appropriate Audio component */}
       {/* <Audio
         ref={audioRef}
