@@ -57,6 +57,7 @@ const Player: React.FC = () => {
   const isLoop = useAppSelector((state) => state.audio.isLoop)
   const dispath = useAppDispatch()
   const songId = (route.params as { encodeId?: string })?.encodeId ?? ""
+  console.log(songId)
   const currentSongId = useAppSelector((state) => state.audio.songId)
  
   function handleAudioAction(action: string, player: Sound) {
