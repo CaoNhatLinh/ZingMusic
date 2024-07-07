@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useRef } from "react";
 import { View, Text, Image, TouchableOpacity, ScrollView } from "react-native";
 import { formatTime } from "../utils/formatTime";
 import { useAppDispatch, useAppSelector } from "../hooks/redux"
 import { changeIconPlay, setAutoPlay, setCurrnetIndexPlaylist, setInfoSongPlayer } from "../redux/features/audioSlice";
 import colors from "../assets/colors";
 import { useNavigation } from "@react-navigation/native";
+import Sound from "react-native-sound";
 
 interface typeTrackListDetailPlaylist {
   streamingStatus: number;
@@ -15,8 +16,12 @@ interface typeTrackListDetailPlaylist {
   artists: [];
   duration: number;
 }
-
+type AudioStatusType = 'loading' | 'success' | 'error' | 'play' | 'pause' | 'next' | 'previous' | 'stop';
 const TrackListDetailPlaylist: React.FC<{ items: [] }> = ({ items }) => {
+  const [status, setStatus] = React.useState<AudioStatusType>('loading');
+  const [duration, setDuration] = React.useState(0);
+  const [errorMessage, setErrorMessage] = React.useState('');
+  const audioRef = useRef<Sound | null>(null)
   const currnetIndexPlaylist = useAppSelector((state) => state.audio?state.audio.currnetIndexPlaylist:null);
   const dispatch = useAppDispatch()
   const navigation = useNavigation();
@@ -29,6 +34,42 @@ const TrackListDetailPlaylist: React.FC<{ items: [] }> = ({ items }) => {
     } 
   };
 
+  function handleAudioAction(action: string, player: Sound) {
+    switch (action) {
+        case 'play':
+            player.play();
+            setStatus('play');
+            break;
+        case 'stop':
+            player.stop();
+            setStatus('stop');
+            break;
+        case 'pause':
+            player.pause();
+            setStatus('pause');
+            break;
+            case 'release':
+              player.release();
+              setStatus('pause');
+              break;
+        default:
+            break;
+    }
+  }
+
+  const handlePlaySong = (linksong:string): void => {
+    audioRef.current = new Sound(linksong, Sound.MAIN_BUNDLE, (error) => {
+      if (error) {
+        setStatus('error');
+        setErrorMessage(error.message);
+      } else {
+        setStatus('success');
+        setErrorMessage('');
+      }
+      handleAudioAction('play', audioRef.current as Sound)
+    }
+  );
+  }
   return (
     <View>
       

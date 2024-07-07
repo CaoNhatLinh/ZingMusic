@@ -26,7 +26,6 @@ interface songType {
   artistsNames: string
   artists: []
 }
-type AudioStatusType = 'loading' | 'success' | 'error' | 'play' | 'pause' | 'next' | 'previous' | 'stop';
 // function playSound(url:String) {
 //   const callback = (error:any, sound:Sound) => {
 //     sound.play(() => {
@@ -41,9 +40,6 @@ type AudioStatusType = 'loading' | 'success' | 'error' | 'play' | 'pause' | 'nex
 const Player: React.FC = () => {
 
 
-  const [status, setStatus] = React.useState<AudioStatusType>('loading');
-  const [duration, setDuration] = React.useState(0);
-  const [errorMessage, setErrorMessage] = React.useState('');
 
 
   const route = useRoute()
@@ -51,36 +47,14 @@ const Player: React.FC = () => {
   const currnetIndexPlaylist = useAppSelector((state) => state.audio.currnetIndexPlaylist)
   const playlistSong: any = useAppSelector((state) => state.audio.playlistSong)
   
-  const audioRef = useRef<Sound | null>(null)
+
   
   const isLoop = useAppSelector((state) => state.audio.isLoop)
   const dispath = useAppDispatch()
   const songId = (route.params as { encodeId?: string })?.encodeId ?? ""
   const currentSongId = useAppSelector((state) => state.audio.songId)
-  function stopAudio() {
-    if (audioRef.current) {
-      audioRef.current.stop();
-    }
-  }
-  function handleAudioAction(action: string, player: Sound) {
-    switch (action) {
-        case 'play':
-            player.play();
-            setStatus('play');
-            break;
-        case 'stop':
-            player.stop();
-            setStatus('stop');
-            break;
-        case 'pause':
-            player.pause();
-            setStatus('pause');
-            break;
-        
-        default:
-            break;
-    }
-}
+ 
+
   function isUpdate(){
     if (songId != currentSongId) {
 
@@ -115,17 +89,7 @@ const Player: React.FC = () => {
                 }
               ))
               
-              audioRef.current = new Sound(linkSong[128], Sound.MAIN_BUNDLE, (error) => {
-                if (error) {
-                  setStatus('error');
-                  setErrorMessage(error.message);
-                } else {
-                  setStatus('success');
-                  setErrorMessage('');
-                }
-                handleAudioAction('play', audioRef.current as Sound)
-              }
-            );
+              
             }
           }
         } catch (err) {
