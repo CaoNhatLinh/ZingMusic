@@ -1,31 +1,26 @@
 import { useRoute } from "@react-navigation/native";
 import React, { useEffect, useState } from "react"
-import { Button, Text, View } from "react-native"
+import { Text, View } from "react-native"
 import Player from "../components/Player";
+import { useAppDispatch } from "../hooks/redux";
 
 
 const SongSreen: React.FC = () => {
     const [dataSong, setDataSong] = useState<any>()
-
-    const route = useRoute();
-    
-
+    const dispatch = useAppDispatch()
     useEffect(() => {
         (async () => {
-          const encodeId = (route.params as { encodeId?: string })?.encodeId ?? "";
+          const songId = 
           
           if (encodeId) {
            
-            // const detailPlaylist: SongType = await (playlistId);
-            // setDataDetailPlaylist(detailPlaylist);
-            // dispatch(setPlaylistSong(detailPlaylist.song.items));
+          
           }
         })();
       }, [route.params]);
     return (
         <> 
             <View >
-
              <Player />
             </View>
         </>

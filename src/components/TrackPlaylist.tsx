@@ -1,11 +1,10 @@
-import React, { useRef } from "react";
-import { View, Text, Image, TouchableOpacity, ScrollView, Button } from "react-native";
+import React from "react";
+import { View, Text, Image, TouchableOpacity, ScrollView } from "react-native";
 import { formatTime } from "../utils/formatTime";
 import { useAppDispatch, useAppSelector } from "../hooks/redux"
-import { changeIconPlay, setAutoPlay, setCurrnetIndexPlaylist, setInfoSongPlayer } from "../redux/features/audioSlice";
+import { changeIconPlay, setAutoPlay, setCurrnetIndexPlaylist, setInfoSongPlayer, setSongId } from "../redux/features/audioSlice";
 import colors from "../assets/colors";
 import { useNavigation } from "@react-navigation/native";
-import Sound from "react-native-sound";
 
 interface typeTrackListDetailPlaylist {
   streamingStatus: number;
@@ -16,8 +15,8 @@ interface typeTrackListDetailPlaylist {
   artists: [];
   duration: number;
 }
-const TrackListDetailPlaylist: React.FC<{ items: [] ,handlePlaySong: void}> = ({ items,handlePlaySong }) => {
- 
+
+const TrackListDetailPlaylist: React.FC<{ items: [] }> = ({ items }) => {
   const currnetIndexPlaylist = useAppSelector((state) => state.audio?state.audio.currnetIndexPlaylist:null);
   const dispatch = useAppDispatch()
   const navigation = useNavigation();
@@ -26,16 +25,14 @@ const TrackListDetailPlaylist: React.FC<{ items: [] ,handlePlaySong: void}> = ({
       dispatch(setCurrnetIndexPlaylist(currentIndex));
       dispatch(changeIconPlay(true));
       dispatch(setAutoPlay(true));
-      navigation.navigate('SongSreen', { encodeId });
+      dispatch(setSongId(encodeId));
+      navigation.navigate('SongSreen ' as never);
     } 
   };
 
-  
-
- 
   return (
     <View>
-      <Button title="Play" onPress={handlePlaySong()}/>
+      
       {items.map((e: typeTrackListDetailPlaylist, i: number) => {
         return (
           <TouchableOpacity
