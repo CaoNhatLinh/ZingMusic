@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useMemo, memo, useCallback } from "react"
-import { Text, View } from "react-native"
+import { ActivityIndicator, Text, View } from "react-native"
 import Controls from "./Control"
 import Sound from "react-native-sound"
 import { getSong, getInfoSong } from "../../api/song"
@@ -57,7 +57,7 @@ const Player: React.FC = () => {
   const isLoop = useAppSelector((state) => state.audio.isLoop)
   const dispath = useAppDispatch()
   const songId = (route.params as { encodeId?: string })?.encodeId ?? ""
-  console.log(songId)
+
   const currentSongId = useAppSelector((state) => state.audio.songId)
 
   function handleAudioAction(action: string, player: Sound) {
@@ -116,7 +116,7 @@ const Player: React.FC = () => {
                 }
               ))
               
-              audioRef.current = new Sound(linkSong[128], Sound.MAIN_BUNDLE, (error) => {
+              audioRef.current =  new Sound(linkSong[128], Sound.MAIN_BUNDLE, (error) => {
                 if (error) {
                   setStatus('error');
                   setErrorMessage(error.message);
@@ -126,13 +126,7 @@ const Player: React.FC = () => {
                 }
                 handleAudioAction('play', audioRef.current as Sound)
               });
-              if (audioRef.current) {
-                const duration = audioRef.current.getDuration();
-                console.log(duration)
-                if (audioRef.current) {
-                  dispath(setDuration(duration));
-                }
-              }
+             
             }
           }
         } catch (err) {
@@ -146,14 +140,13 @@ const Player: React.FC = () => {
   return (
     <View>
       {
-        songId
+        audioRef.current
           ?
           <View>
             <Controls auRef={audioRef.current} />
           </View>
           :
-          null
-
+          <ActivityIndicator />
       }
 
       {/* Replace the audio element with the appropriate Audio component */}
