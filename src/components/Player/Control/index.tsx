@@ -31,7 +31,7 @@ const Control: React.FC<{ auRef: any | null }> = ({ auRef }) => {
         }} />
 
         <TrackInfo />
-        <SongSliderControl/>
+        <SongSliderControl auRef={auRef}/>
         
 
         <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>

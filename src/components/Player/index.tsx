@@ -59,7 +59,7 @@ const Player: React.FC = () => {
   const songId = (route.params as { encodeId?: string })?.encodeId ?? ""
   console.log(songId)
   const currentSongId = useAppSelector((state) => state.audio.songId)
- 
+
   function handleAudioAction(action: string, player: Sound) {
     switch (action) {
         case 'play':
@@ -125,8 +125,14 @@ const Player: React.FC = () => {
                   setErrorMessage('');
                 }
                 handleAudioAction('play', audioRef.current as Sound)
+              });
+              if (audioRef.current) {
+                const duration = audioRef.current.getDuration();
+                console.log(duration)
+                if (audioRef.current) {
+                  dispath(setDuration(duration));
+                }
               }
-            );
             }
           }
         } catch (err) {

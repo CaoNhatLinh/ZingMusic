@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import { Image, StyleSheet, Text, View } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { useAppSelector } from "../../../hooks/redux";
@@ -21,7 +21,6 @@ const TrackInfo: React.FC = () => {
       borderRadius: 9999999
     }
   });
-
   return (
     <>
       <View style={{ flexDirection: "column", alignItems: "center" }}>
@@ -58,4 +57,4 @@ const TrackInfo: React.FC = () => {
   );
 };
 
-export default TrackInfo;
+export default memo(TrackInfo);
