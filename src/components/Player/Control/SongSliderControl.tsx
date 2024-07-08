@@ -10,34 +10,38 @@ import { setCurrentTime, setDuration } from "../../../redux/features/audioSlice"
 const width = Dimensions.get('window').width;
 const SongSliderControl: React.FC<{ auRef: Sound | null | undefined }> = ({  auRef }) => {
 
-    const currentTime = useSelector((state: any) => state.audio.currentTime);   
-    const duration = useSelector((state: any) => state.audio.duration);
-   const dispatch = useAppDispatch();
+    const currentTime = useSelector((state: any) => state.audio.currentTime);
+    
     useEffect(() => {
-        const intervalId = setInterval(() => {
-            auRef?.getCurrentTime((seconds) => {
-                dispatch(setCurrentTime(seconds))
-            }
-            );
+        const interval = setInterval(() => {
+            auRef?.getCurrentTime((seconds) =>{
+                console.log(seconds);
+            } );
         }, 1000);
-       
-        return () => clearInterval(intervalId);
+
+        return () => {
+            clearInterval(interval);
+        };
     }, [currentTime]);
-    useEffect(() => {
-        dispatch(setDuration(auRef?.getDuration() ?? 0));
+    const duration = useSelector((state: any) => state.audio.duration);
+    
+     
+   
+    // useEffect(() => {
+    //     dispatch(setDuration((Math.floor(auRef?.getDuration() ?? 0))));
        
-    }, [auRef]);
+    // }, [auRef]);
     const formatTime = (seconds:any) => {
         const minutes = Math.floor(seconds / 60);
-        const remainingSeconds = Math.floor(seconds % 60);
+        const remainingSeconds =seconds % 60;
         const formattedSeconds = remainingSeconds < 10 ? `0${remainingSeconds}` : remainingSeconds;
         return `${minutes}:${formattedSeconds}`;
     };
     return (
-        duration?
+        auRef?
            
             <View style={{ justifyContent: "center", flexDirection: "row" }}>
-                <Text style={{ color: colors.white }} >{formatTime(currentTime)}</Text>
+                <Text style={{ color: colors.white }} >{formatTime(Math.floor(currentTime))}</Text>
                 <Slider
                     style={{ width: width * 0.8, height: 40 }}
                     minimumValue={0}
@@ -46,8 +50,8 @@ const SongSliderControl: React.FC<{ auRef: Sound | null | undefined }> = ({  auR
                     minimumTrackTintColor="#1EB1FC"
                     maximumTrackTintColor="#8E8E93"
                     thumbTintColor="#1EB1FC"
-                    value={currentTime}
-                    onValueChange={setCurrentTime}
+                    value={Math.floor(currentTime)}
+                    // onValueChange={setCurrentTime}
                 />
                 <Text style={{ color: colors.white }} >{formatTime(duration)}</Text>
             </View>
