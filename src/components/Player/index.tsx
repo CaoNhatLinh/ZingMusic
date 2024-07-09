@@ -134,11 +134,13 @@ const Player: React.FC = () => {
                 });
               });
               audioRef.current = sound;
+              
               intervalRef.current = setInterval(() => {
                 if (audioRef.current) {
                   audioRef.current.getCurrentTime((seconds) => {
-                  console.log(seconds);
+                  dispath(setCurrentTime(Math.floor(seconds)))
                 });
+
               }
               }, 1000);
             }
@@ -149,10 +151,11 @@ const Player: React.FC = () => {
       }
     )()
   }, [dispath])
-
+ 
   useEffect(() => {
     return () => {
       if (intervalRef.current) {
+        
         clearInterval(intervalRef.current);
       }
     };

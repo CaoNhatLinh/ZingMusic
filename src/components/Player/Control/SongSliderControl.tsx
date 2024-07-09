@@ -9,34 +9,23 @@ import { setCurrentTime, setDuration } from "../../../redux/features/audioSlice"
 
 const width = Dimensions.get('window').width;
 const SongSliderControl: React.FC<{ auRef: Sound | null | undefined }> = ({  auRef }) => {
-
+    const dispath = useAppDispatch();
     const currentTime = useSelector((state: any) => state.audio.currentTime);
-    
-    useEffect(() => {
-        const interval = setInterval(() => {
-            auRef?.getCurrentTime((seconds) =>{
-                console.log(seconds);
-            } );
-        }, 1000);
-
-        return () => {
-            clearInterval(interval);
-        };
-    }, [currentTime]);
     const duration = useSelector((state: any) => state.audio.duration);
-    
-     
-   
-    // useEffect(() => {
-    //     dispatch(setDuration((Math.floor(auRef?.getDuration() ?? 0))));
-       
-    // }, [auRef]);
+    useEffect(() => {
+        dispath(setDuration((Math.floor(auRef?.getDuration() ?? 0))));
+    }, [auRef]);
     const formatTime = (seconds:any) => {
         const minutes = Math.floor(seconds / 60);
         const remainingSeconds =seconds % 60;
         const formattedSeconds = remainingSeconds < 10 ? `0${remainingSeconds}` : remainingSeconds;
         return `${minutes}:${formattedSeconds}`;
     };
+    const handleChangedSlider = (value:number) => {
+        if (auRef) {
+            auRef.setCurrentTime(value);
+        }
+    }
     return (
         auRef?
            
@@ -51,7 +40,7 @@ const SongSliderControl: React.FC<{ auRef: Sound | null | undefined }> = ({  auR
                     maximumTrackTintColor="#8E8E93"
                     thumbTintColor="#1EB1FC"
                     value={Math.floor(currentTime)}
-                    // onValueChange={setCurrentTime}
+                    onValueChange={handleChangedSlider}
                 />
                 <Text style={{ color: colors.white }} >{formatTime(duration)}</Text>
             </View>

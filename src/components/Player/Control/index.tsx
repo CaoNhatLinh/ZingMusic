@@ -9,10 +9,12 @@ import TrackInfo from "./TrackInfo"
 import VolumeControl from "./VolumeControl"
 import VolumeSliderControl from "./VolumeSliderControl"
 
-import { Dimensions, Text, View   } from "react-native"
+import { Button, Dimensions, Text, View   } from "react-native"
 import Header from "./header"
 import colors from "../../../assets/colors"
 import SongSliderControl from "./SongSliderControl"
+import { useAppDispatch, useAppSelector } from "../../../hooks/redux"
+import { setCurrentTime } from "../../../redux/features/audioSlice"
 
 const win = Dimensions.get('window');
 const Control: React.FC<{ auRef: any | null }> = ({ auRef }) => {
@@ -33,10 +35,10 @@ const Control: React.FC<{ auRef: any | null }> = ({ auRef }) => {
         <TrackInfo />
         <SongSliderControl auRef={auRef}/>
         
-
         <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
             {/* <PreviousControl /> */}
             <PlayControl auRef={auRef} />
+
             {/* <NextControl /> */}
           </View>
         {/* End Mid Controls Button */}
