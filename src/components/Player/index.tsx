@@ -51,44 +51,44 @@ const Player: React.FC = () => {
   const isPlay = useAppSelector((state) => state.audio.isPlay)
   const currnetIndexPlaylist = useAppSelector((state) => state.audio.currnetIndexPlaylist)
   const playlistSong: any = useAppSelector((state) => state.audio.playlistSong)
-  
+
   const audioRef = useRef<Sound | null>(null)
-  
+
   const isLoop = useAppSelector((state) => state.audio.isLoop)
   const dispath = useAppDispatch()
   const songId = (route.params as { encodeId?: string })?.encodeId ?? ""
 
   const currentSongId = useAppSelector((state) => state.audio.songId)
+  const intervalRef =  useRef< NodeJS.Timeout | null>(null)
 
   function handleAudioAction(action: string, player: Sound) {
     switch (action) {
-        case 'play':
-            player.play();
-            setStatus('play');
-            break;
-        case 'stop':
-            player.stop();
-            setStatus('stop');
-            break;
-        case 'pause':
-            player.pause();
-            setStatus('pause');
-            break;
-        
-        default:
-            break;
+      case 'play':
+        player.play();
+        setStatus('play');
+        break;
+      case 'stop':
+        player.stop();
+        setStatus('stop');
+        break;
+      case 'pause':
+        player.pause();
+        setStatus('pause');
+        break;
+
+      default:
+        break;
     }
-}
-  function isUpdate(){
+  }
+  function isUpdate() {
     if (songId != currentSongId) {
 
       dispath(setSongId(songId))
-      
+
       return true
     }
     return false
   }
-  
   useEffect(() => {
     (
 
@@ -99,10 +99,10 @@ const Player: React.FC = () => {
           }
           else {
             if (isUpdate()) {
-              if(audioRef.current) {
+              if (audioRef.current) {
                 audioRef.current.stop()
               }
-             
+
               const linkSong: songType = await getSong(songId)
               linkSong[128] ? dispath(setSrcAudio(linkSong[128])) : dispath(setSrcAudio(""))
               const infoSong: songType = await getInfoSong(songId)
@@ -115,8 +115,8 @@ const Player: React.FC = () => {
                   artists: infoSong.artists,
                 }
               ))
-              
-              audioRef.current =  new Sound(linkSong[128], Sound.MAIN_BUNDLE, (error) => {
+
+              const sound = new Sound(linkSong[128], Sound.MAIN_BUNDLE, (error) => {
                 if (error) {
                   setStatus('error');
                   setErrorMessage(error.message);
@@ -124,9 +124,23 @@ const Player: React.FC = () => {
                   setStatus('success');
                   setErrorMessage('');
                 }
-                handleAudioAction('play', audioRef.current as Sound)
+                sound.play((success) => {
+                  if (success) {
+                    console.log('successfully finished playing');
+                  } else {
+                    console.log('playback failed due to audio decoding errors');
+                  }
+                  sound.release();
+                });
               });
-             
+              audioRef.current = sound;
+              intervalRef.current = setInterval(() => {
+                if (audioRef.current) {
+                  audioRef.current.getCurrentTime((seconds) => {
+                  console.log(seconds);
+                });
+              }
+              }, 1000);
             }
           }
         } catch (err) {
@@ -136,7 +150,13 @@ const Player: React.FC = () => {
     )()
   }, [dispath])
 
-
+  useEffect(() => {
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+      }
+    };
+  }, []);
   return (
     <View>
       {
