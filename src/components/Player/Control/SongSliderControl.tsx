@@ -11,10 +11,12 @@ const width = Dimensions.get('window').width;
 const SongSliderControl: React.FC = () => {
     const {
         audioRef,
+        status,
       } = useAudio();
     const dispath = useAppDispatch();
     const currentTime = useSelector((state: any) => state.audio.currentTime);
     const duration = useSelector((state: any) => state.audio.duration);
+    
     const formatTime = (seconds:any) => {
         const minutes = Math.floor(seconds / 60);
         const remainingSeconds =Math.floor(seconds % 60);

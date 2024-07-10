@@ -31,15 +31,14 @@ interface AudioProviderProps {
 
 export const AudioProvider: FC<AudioProviderProps> = ({ children }) => {
   const dispatch = useAppDispatch();
-  const [status, setStatus] = useState<AudioStatusType>('loading');
+  const [status, setStatus] = useState<AudioStatusType >('loading');
   const [errorMessage, setErrorMessage] = useState('');
   const audioRef = useRef<Sound | null>(null);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const initializeAudio = (url: string) => {
     if (audioRef.current) {
-      audioRef.current.release();
+      stopAudio();
     }
-
     const sound = new Sound(url, Sound.MAIN_BUNDLE, (error) => {
       if (error) {
         setStatus('error');
@@ -47,33 +46,51 @@ export const AudioProvider: FC<AudioProviderProps> = ({ children }) => {
       } else {
         setStatus('success');
         setErrorMessage('');
-        audioRef.current?.play();
+        dispatch(setDuration(sound.getDuration()));
+        audioRef.current = sound;
+        playAudio();
       }
-      dispatch(setDuration(sound.getDuration()));
     });
-    audioRef.current = sound;
+  };
+
+  const playAudio = () => {
+    audioRef.current?.play((success) => {
+      if (success) {
+        stopAudio();
+        setStatus('loading');
+      } else {
+        setStatus('error');
+        setErrorMessage('Error playing audio');
+      }
+    });
+    setStatus('play');
     intervalRef.current = setInterval(() => {
       if (audioRef.current) {
         audioRef.current.getCurrentTime((seconds) => {
-          dispatch(setCurrentTime(Math.floor(seconds)))
+          console.log('seconds', seconds);
+          dispatch(setCurrentTime(seconds));
         });
       }
     }, 1000);
-    
-  };  
-
-  const playAudio = () => {
-    audioRef.current?.play();
-    setStatus('play');
+    console.log('play', intervalRef.current);
   };
 
   const pauseAudio = () => {
     audioRef.current?.pause();
+    if (intervalRef.current) {
+      console.log(' pause', intervalRef.current);
+      clearInterval(intervalRef.current);
+    }
     setStatus('pause');
+    
   };
-
+  
   const stopAudio = () => {
     audioRef.current?.stop();
+    audioRef.current?.release();
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+    }
     setStatus('stop');
   };
   return (
