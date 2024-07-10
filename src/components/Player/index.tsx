@@ -24,8 +24,6 @@ interface songType {
   artistsNames: string
   artists: []
 }
-type AudioStatusType = 'loading' | 'success' | 'error' | 'play' | 'pause' | 'next' | 'previous' | 'stop';
-
 
 const Player: React.FC = () => {
 
@@ -34,20 +32,14 @@ const Player: React.FC = () => {
     initializeAudio,
   } = useAudio();
   const route = useRoute()
-  const isPlay = useAppSelector((state) => state.audio.isPlay)
   const currnetIndexPlaylist = useAppSelector((state) => state.audio.currnetIndexPlaylist)
   const playlistSong: any = useAppSelector((state) => state.audio.playlistSong)
-
   const audioRef = useRef<Sound | null>(null)
-
   const isLoop = useAppSelector((state) => state.audio.isLoop)
   const dispath = useAppDispatch()
   const RoutesongId = (route.params as { encodeId?: string })?.encodeId ?? ""
 
   const currentSongId = useAppSelector((state) => state.audio.songId)
-  const intervalRef = useRef<NodeJS.Timeout | null>(null)
-
-
   function isUpdate() {
     console.log("audio", audioRef.current)
     console.log("RoutesongId", RoutesongId)
@@ -85,27 +77,6 @@ const Player: React.FC = () => {
                 }
               ))
               initializeAudio(linkSong[128])
-              // const sound = new Sound(linkSong[128], Sound.MAIN_BUNDLE, (error) => {
-                
-              //   dispath(setDuration(sound.getDuration()));
-              //   sound.play((success) => {
-              //     if (success) {
-              //       console.log('successfully finished playing');
-              //     } else {
-              //       console.log('playback failed due to audio decoding errors');
-              //     }
-              //     sound.release();
-              //   });
-              // });
-              // audioRef.current = sound;
-              // intervalRef.current = setInterval(() => {
-              //   if (audioRef.current) {
-              //     audioRef.current.getCurrentTime((seconds) => {
-              //       dispath(setCurrentTime(Math.floor(seconds)))
-              //     });
-
-              //   }
-              // }, 1000);
             }
           }
         } catch (err) {

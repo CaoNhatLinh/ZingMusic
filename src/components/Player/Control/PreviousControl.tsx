@@ -1,19 +1,19 @@
-import React from "react"
-import IconPrevious from "../../Icons/Previous"
-import { useAppSelector, useAppDispatch } from "../../../hooks/redux"
-import { setSongId, setCurrnetIndexPlaylist, changeIconPlay } from "../../../redux/features/audioSlice"
+import React from "react";
+import { View, TouchableOpacity } from "react-native";
+import Icon from "react-native-vector-icons/FontAwesome6";
+import { setSongId, setCurrnetIndexPlaylist, changeIconPlay } from "../../../redux/features/audioSlice";
+import { useAppDispatch, useAppSelector } from "../../../hooks/redux";
 
 const PreviousControl: React.FC = () => {
+  const currnetIndexPlaylist = useAppSelector((state) => state.audio.currnetIndexPlaylist);
+  const playlistSong = useAppSelector((state) => state.audio.playlistSong);
 
-  const currnetIndexPlaylist = useAppSelector((state) => state.audio.currnetIndexPlaylist)
-  const playlistSong:any = useAppSelector((state) => state.audio.playlistSong)
+  const dispatch = useAppDispatch();
 
-  const dispatch = useAppDispatch()
-
-  const handleNextSong = () => {
-    if(playlistSong !== undefined && playlistSong.length > 0) {
+  const handlePreviousSong = () => {
+    if (playlistSong !== undefined && playlistSong.length > 0) {
       let currentIndex
-      if(currnetIndexPlaylist === 0) {
+      if (currnetIndexPlaylist === 0) {
         currentIndex = 0
       } else {
         currentIndex = currnetIndexPlaylist - 1
@@ -32,13 +32,10 @@ const PreviousControl: React.FC = () => {
   }
 
   return (
-    <button
-      onClick={handleNextSong}
-      className="mx-2 my-0 style__buttons" title="Previous Song"
-    >
-      <IconPrevious setColor="white" setWidth="16px" setHeight="16px" />
-    </button>
-  )
-}
+    <TouchableOpacity onPress={handlePreviousSong} style={{ width: 42, height: 42, marginHorizontal: 2, marginVertical: 0 }}>
+      <Icon name="backward-step" size={24} color="white" />
+    </TouchableOpacity>
+  );
+};
 
-export default PreviousControl
+export default PreviousControl;

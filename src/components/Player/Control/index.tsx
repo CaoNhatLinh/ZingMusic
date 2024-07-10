@@ -44,8 +44,8 @@ const Control: React.FC= () => {
         <TrackInfo />
         <SongSliderControl/>
         
-        <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-            {/* <PreviousControl /> */}
+        <View style={{ flex: 1, justifyContent:"space-between", flexDirection:"row", alignItems: "center" }}>
+            <PreviousControl />
             <PlayControl/>
             <NextControl />
           </View>
