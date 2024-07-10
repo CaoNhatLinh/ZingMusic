@@ -1,47 +1,36 @@
-import React from "react"
-import IconNext from "../../Icons/Next"
-import { useAppSelector, useAppDispatch } from "../../../hooks/redux"
-import { setSongId, setCurrnetIndexPlaylist, changeIconPlay } from "../../../redux/features/audioSlice"
+import React from "react";
+import { View, TouchableOpacity } from "react-native";
+import Icon from "react-native-vector-icons/FontAwesome6";
+import { setSongId, setCurrnetIndexPlaylist, changeIconPlay } from "../../../redux/features/audioSlice";
+import { useAppDispatch, useAppSelector } from "../../../hooks/redux";
 
 const NextControl: React.FC = () => {
+  const currnetIndexPlaylist = useAppSelector((state) => state.audio.currnetIndexPlaylist);
+  const playlistSong = useAppSelector((state) => state.audio.playlistSong);
 
-  const currnetIndexPlaylist = useAppSelector((state) => state.audio.currnetIndexPlaylist)
-  const playlistSong:any = useAppSelector((state) => state.audio.playlistSong)
-
-  const dispatch = useAppDispatch()
+  const dispatch = useAppDispatch();
 
   const handleNextSong = () => {
-    if(playlistSong !== undefined && playlistSong.length > 0) {
+    if (playlistSong !== undefined && playlistSong.length > 0) {
+      let currentIndex;
 
-      let currentIndex
-
-      if(currnetIndexPlaylist === playlistSong.length - 1) {
-        currentIndex = 0
+      if (currnetIndexPlaylist === playlistSong.length - 1) {
+        currentIndex = 0;
       } else {
-        currentIndex = currnetIndexPlaylist + 1
+        currentIndex = currnetIndexPlaylist + 1;
       }
-
-      dispatch(setCurrnetIndexPlaylist(
-        currentIndex
-      ))
-
-      dispatch(setSongId(
-        playlistSong[currentIndex].encodeId
-      ))
-
-      dispatch(changeIconPlay(true))
+      console.log("currentIndex", currentIndex);
+      dispatch(setCurrnetIndexPlaylist(currentIndex));
+      dispatch(setSongId(playlistSong[currentIndex].encodeId));
+      dispatch(changeIconPlay(true));
     }
-  }
+  };
 
   return (
-    <button
-      onClick={handleNextSong}
-      className="mx-2 my-0 style__buttons"
-      title="Next Song"
-    >
-      <IconNext setColor="white" setWidth="16px" setHeight="16px" />
-    </button>
-  )
-}
+    <TouchableOpacity onPress={handleNextSong} style={{ width: 42, height: 42, marginHorizontal: 2, marginVertical: 0 }}>
+      <Icon name="forward-step" size={24} color="white"/>
+    </TouchableOpacity>
+  );
+};
 
-export default NextControl
+export default NextControl;

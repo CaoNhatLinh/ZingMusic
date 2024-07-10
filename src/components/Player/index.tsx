@@ -56,7 +56,7 @@ const Player: React.FC = () => {
 
   const isLoop = useAppSelector((state) => state.audio.isLoop)
   const dispath = useAppDispatch()
-  const songId = (route.params as { encodeId?: string })?.encodeId ?? ""
+  const RoutesongId = (route.params as { encodeId?: string })?.encodeId ?? ""
 
   const currentSongId = useAppSelector((state) => state.audio.songId)
   const intervalRef =  useRef< NodeJS.Timeout | null>(null)
@@ -81,20 +81,21 @@ const Player: React.FC = () => {
     }
   }
   function isUpdate() {
-    if (songId != currentSongId) {
-
-      dispath(setSongId(songId))
-
+    console.log("audio",audioRef.current)
+    console.log("RoutesongId", RoutesongId)
+    console.log("currentSongId", currentSongId)
+    if (RoutesongId != currentSongId) {
+      dispath(setSongId(RoutesongId))
       return true
     }
     return false
   }
+  
   useEffect(() => {
     (
-
       async () => {
         try {
-          if (songId === "") {
+          if (RoutesongId === "") {
             console.log("song id not found")
           }
           else {
@@ -102,10 +103,10 @@ const Player: React.FC = () => {
               if (audioRef.current) {
                 audioRef.current.stop()
               }
-
-              const linkSong: songType = await getSong(songId)
+              const songID = playlistSong[currnetIndexPlaylist].encodeId
+              const linkSong: songType = await getSong(songID)
               linkSong[128] ? dispath(setSrcAudio(linkSong[128])) : dispath(setSrcAudio(""))
-              const infoSong: songType = await getInfoSong(songId)
+              const infoSong: songType = await getInfoSong(songID)
               dispath(setInfoSongPlayer(
                 {
                   title: infoSong.title,
@@ -150,7 +151,7 @@ const Player: React.FC = () => {
         }
       }
     )()
-  }, [dispath])
+  }, [dispath,currnetIndexPlaylist])
  
   useEffect(() => {
     return () => {
