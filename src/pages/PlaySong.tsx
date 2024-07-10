@@ -5,7 +5,7 @@ import Player from "../components/Player";
 
 
 const SongSreen: React.FC = () => {
-  
+
     return (
         <> 
             <View >

@@ -15,10 +15,19 @@ import colors from "../../../assets/colors"
 import SongSliderControl from "./SongSliderControl"
 import { useAppDispatch, useAppSelector } from "../../../hooks/redux"
 import { setCurrentTime } from "../../../redux/features/audioSlice"
+import { useAudio } from "../../../utils/AudioContext"
 
 const win = Dimensions.get('window');
-const Control: React.FC<{ auRef: any | null }> = ({ auRef }) => {
-  
+const Control: React.FC= () => {
+  const {
+    audioRef,
+    status,
+    errorMessage,
+    initializeAudio,
+    playAudio,
+    pauseAudio,
+    stopAudio,
+  } = useAudio();
   return (
     <>
       {/* <SongSliderControl auRef={auRef} /> */}
@@ -33,11 +42,11 @@ const Control: React.FC<{ auRef: any | null }> = ({ auRef }) => {
         }} />
 
         <TrackInfo />
-        <SongSliderControl auRef={auRef}/>
+        <SongSliderControl/>
         
         <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
             {/* <PreviousControl /> */}
-            <PlayControl auRef={auRef} />
+            <PlayControl/>
             <NextControl />
           </View>
         {/* End Mid Controls Button */}

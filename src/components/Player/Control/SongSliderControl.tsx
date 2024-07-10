@@ -6,28 +6,28 @@ import Sound from "react-native-sound";
 import colors from "../../../assets/colors";
 import { useAppDispatch } from "../../../hooks/redux";
 import { setCurrentTime, setDuration } from "../../../redux/features/audioSlice";
-
+import { useAudio } from "../../../utils/AudioContext"
 const width = Dimensions.get('window').width;
-const SongSliderControl: React.FC<{ auRef: Sound | null | undefined }> = ({  auRef }) => {
+const SongSliderControl: React.FC = () => {
+    const {
+        audioRef,
+      } = useAudio();
     const dispath = useAppDispatch();
     const currentTime = useSelector((state: any) => state.audio.currentTime);
     const duration = useSelector((state: any) => state.audio.duration);
-    useEffect(() => {
-        dispath(setDuration((Math.floor(auRef?.getDuration() ?? 0))));
-    }, [auRef]);
     const formatTime = (seconds:any) => {
         const minutes = Math.floor(seconds / 60);
-        const remainingSeconds =seconds % 60;
+        const remainingSeconds =Math.floor(seconds % 60);
         const formattedSeconds = remainingSeconds < 10 ? `0${remainingSeconds}` : remainingSeconds;
         return `${minutes}:${formattedSeconds}`;
     };
     const handleChangedSlider = (value:number) => {
-        if (auRef) {
-            auRef.setCurrentTime(value);
+        if (audioRef) {
+            audioRef.current?.setCurrentTime(value);
         }
     }
     return (
-        auRef?
+        audioRef?
            
             <View style={{ justifyContent: "center", flexDirection: "row" }}>
                 <Text style={{ color: colors.white }} >{formatTime(Math.floor(currentTime))}</Text>

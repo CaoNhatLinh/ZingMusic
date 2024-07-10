@@ -4,19 +4,25 @@ import { changeIconPlay } from "../../../redux/features/audioSlice";
 import Sound from "react-native-sound";
 import { useAppDispatch, useAppSelector } from "../../../hooks/redux";
 import Icon from "react-native-vector-icons/FontAwesome";
-const PlayControl: React.FC<{ auRef: Sound | null | undefined }> = ({ auRef }) => {
+import { useAudio } from "../../../utils/AudioContext";
+const PlayControl: React.FC= () => {
+    const {
+      audioRef,
+      playAudio,
+      pauseAudio,
+    } = useAudio();
   const isPlay = useAppSelector((state) => state.audio.isPlay);
   const dispatch = useAppDispatch();
   const handlePlaySong = () => {
     if (isPlay === true) {
       dispatch(changeIconPlay(false));
-      if (auRef) {
-        auRef.pause();
+      if (audioRef) {
+        pauseAudio();
       }
     } else {
       dispatch(changeIconPlay(true));
-      if (auRef) {
-        auRef.play();
+      if (audioRef) {
+        playAudio();
       }
     }
   };

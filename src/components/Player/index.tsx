@@ -10,11 +10,13 @@ import {
   setDuration,
   setSrcAudio,
   changeIconPlay,
+  setCurrentSound,
 } from "../../redux/features/audioSlice"
 import { setSongId, setCurrnetIndexPlaylist } from "../../redux/features/audioSlice"
 import Lyric from "./Lyric"
 import colors from "../../assets/colors"
 import { useRoute } from "@react-navigation/native"
+import { useAudio } from "../../utils/AudioContext"
 
 //
 interface songType {
@@ -27,70 +29,34 @@ interface songType {
   artists: []
 }
 type AudioStatusType = 'loading' | 'success' | 'error' | 'play' | 'pause' | 'next' | 'previous' | 'stop';
-// function playSound(url:String) {
-//   const callback = (error:any, sound:Sound) => {
-//     sound.play(() => {
-//       sound.release();
-//     });
-//   };
-
-//     return new Sound(url, Sound.MAIN_BUNDLE, error => callback(error, sound));
-//   }
-
 
 
 const Player: React.FC = () => {
 
-
-  const [status, setStatus] = React.useState<AudioStatusType>('loading');
-  const [duration, setDuration] = React.useState(0);
-  const [errorMessage, setErrorMessage] = React.useState('');
-
-
+  const {
+    audioRef,
+    intervalRef,
+    status,
+    errorMessage,
+    initializeAudio,
+  } = useAudio();
   const route = useRoute()
   const isPlay = useAppSelector((state) => state.audio.isPlay)
   const currnetIndexPlaylist = useAppSelector((state) => state.audio.currnetIndexPlaylist)
   const playlistSong: any = useAppSelector((state) => state.audio.playlistSong)
 
-  const audioRef = useRef<Sound | null>(null)
-
   const isLoop = useAppSelector((state) => state.audio.isLoop)
   const dispath = useAppDispatch()
   const RoutesongId = (route.params as { encodeId?: string })?.encodeId ?? ""
-
   const currentSongId = useAppSelector((state) => state.audio.songId)
-  const intervalRef =  useRef< NodeJS.Timeout | null>(null)
 
-  function handleAudioAction(action: string, player: Sound) {
-    switch (action) {
-      case 'play':
-        player.play();
-        setStatus('play');
-        break;
-      case 'stop':
-        player.stop();
-        setStatus('stop');
-        break;
-      case 'pause':
-        player.pause();
-        setStatus('pause');
-        break;
-
-      default:
-        break;
-    }
-  }
   function isUpdate() {
-    console.log("audio",audioRef.current)
-    console.log("RoutesongId", RoutesongId)
-    console.log("currentSongId", currentSongId)
     if (RoutesongId != currentSongId) {
       dispath(setSongId(RoutesongId))
       return true
     }
     return false
   }
-  
   useEffect(() => {
     (
       async () => {
@@ -116,34 +82,7 @@ const Player: React.FC = () => {
                   artists: infoSong.artists,
                 }
               ))
-
-              const sound = new Sound(linkSong[128], Sound.MAIN_BUNDLE, (error) => {
-                if (error) {
-                  setStatus('error');
-                  setErrorMessage(error.message);
-                } else {
-                  setStatus('success');
-                  setErrorMessage('');
-                }
-                sound.play((success) => {
-                  if (success) {
-                    console.log('successfully finished playing');
-                  } else {
-                    console.log('playback failed due to audio decoding errors');
-                  }
-                  sound.release();
-                });
-              });
-              audioRef.current = sound;
-              
-              intervalRef.current = setInterval(() => {
-                if (audioRef.current) {
-                  audioRef.current.getCurrentTime((seconds) => {
-                  dispath(setCurrentTime(Math.floor(seconds)))
-                });
-
-              }
-              }, 1000);
+              initializeAudio(linkSong[128]);
             }
           }
         } catch (err) {
@@ -151,23 +90,22 @@ const Player: React.FC = () => {
         }
       }
     )()
-  }, [dispath,currnetIndexPlaylist])
- 
+  }, [dispath, currnetIndexPlaylist])
   useEffect(() => {
     return () => {
       if (intervalRef.current) {
-        
         clearInterval(intervalRef.current);
       }
     };
   }, []);
   return (
     <View>
+            <Text style={{ color: colors.white }}>{status}</Text>
       {
-        audioRef.current
+        status!='loading' && status!='error'
           ?
           <View>
-            <Controls auRef={audioRef.current} />
+            <Controls/>
           </View>
           :
           <ActivityIndicator />
