@@ -1,7 +1,7 @@
 import React from "react";
 import { View, TouchableOpacity } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome6";
-import { setSongId, setCurrnetIndexPlaylist, changeIconPlay } from "../../../redux/features/audioSlice";
+import { setSongId, setCurrnetIndexPlaylist, changeIconPlay, setCurrentTime } from "../../../redux/features/audioSlice";
 import { useAppDispatch, useAppSelector } from "../../../hooks/redux";
 
 const NextControl: React.FC = () => {
@@ -18,10 +18,11 @@ const NextControl: React.FC = () => {
         currentIndex = 0;
       } else {
         currentIndex = currnetIndexPlaylist + 1;
+        dispatch(setCurrnetIndexPlaylist(currentIndex));
+        dispatch(setSongId(playlistSong[currentIndex].encodeId));
+        dispatch(changeIconPlay(true));
       }
-      dispatch(setCurrnetIndexPlaylist(currentIndex));
-      dispatch(setSongId(playlistSong[currentIndex].encodeId));
-      dispatch(changeIconPlay(true));
+     
     }
   };
 

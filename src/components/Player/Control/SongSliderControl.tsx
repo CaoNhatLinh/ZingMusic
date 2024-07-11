@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import Sound from "react-native-sound";
 import colors from "../../../assets/colors";
-import { useAppDispatch } from "../../../hooks/redux";
+import { useAppDispatch, useAppSelector } from "../../../hooks/redux";
 import { setCurrentTime, setDuration } from "../../../redux/features/audioSlice";
 import { useAudio } from "../../../utils/AudioContext"
 const win = Dimensions.get('window');
@@ -15,9 +15,8 @@ const SongSliderControl: React.FC = () => {
         audioRef,
         status,
       } = useAudio();
-    const dispath = useAppDispatch();
-    const currentTime = useSelector((state: any) => state.audio.currentTime);
-    const duration = useSelector((state: any) => state.audio.duration);
+    const currentTime = useAppSelector((state: any) => state.audio.currentTime);
+    const duration = useAppSelector((state: any) => state.audio.duration);
     
     const formatTime = (seconds:any) => {
         const minutes = Math.floor(seconds / 60);

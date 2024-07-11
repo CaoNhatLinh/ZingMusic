@@ -29,11 +29,13 @@ const TrackInfo: React.FC = () => {
           <Icon name="share" size={20} color="#FFF" />
           <View style={{ flexDirection: "column", alignItems: "center" }}>
             <Text
-              style={{
+              style={{ 
                 fontSize: 20,
                 color: colors.white,
                 opacity: 0.9,
                 marginBottom: 1,
+                width: win.width * 0.6,
+                textAlign: "center"
               }}
             >
               {info.title}

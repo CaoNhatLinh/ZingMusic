@@ -59,7 +59,6 @@ const Player: React.FC = () => {
               if (audioRef.current) {
                 audioRef.current.stop()
               }
-              console.log("initialize audio")
               const songID = playlistSong[currnetIndexPlaylist].encodeId
               const linkSong: songType = await getSong(songID)
               linkSong[128] ? dispath(setSrcAudio(linkSong[128])) : dispath(setSrcAudio(""))

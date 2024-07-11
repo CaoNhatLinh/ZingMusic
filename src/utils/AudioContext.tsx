@@ -46,6 +46,7 @@ export const AudioProvider: FC<AudioProviderProps> = ({ children }) => {
       } else {
         setStatus('success');
         setErrorMessage('');
+        dispatch(setCurrentTime(0));
         dispatch(setDuration(sound.getDuration()));
         audioRef.current = sound;
         playAudio();

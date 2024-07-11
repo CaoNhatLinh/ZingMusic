@@ -26,7 +26,6 @@ const ImgArt =  () => {
 
   useEffect(() => {
     if (isPlay) {
-      console.log(duration)
       startRotation(duration);
     } else {
       rotateValue.stopAnimation((value) => {
@@ -48,7 +47,7 @@ const ImgArt =  () => {
     imgArt: {
       height: 70 * ratio/100,
       width: 70 * ratio/100,
-      borderRadius: 300,
+      borderRadius: 999,
       resizeMode: 'cover'
     }
   });
