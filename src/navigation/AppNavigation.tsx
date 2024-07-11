@@ -1,5 +1,5 @@
 import { DefaultTheme, NavigationContainer } from "@react-navigation/native"
-import { createStackNavigator } from "@react-navigation/stack";
+import { createStackNavigator, TransitionPresets } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Home from "../pages/Home";
@@ -38,14 +38,52 @@ export const AppNavigation = () => {
                         color: 'white'
                     }
                 }}
-            > 
+            >
                 <Stack.Screen name="inapp" component={InappNavigation} options={{ headerShown: false }} />
                 <Stack.Screen name="DetailPlaylist"
                     component={DetailPlaylist}
-                    options={({ route }: { route: { params?: { name?: string } } }) => ({ title: route.params?.name, headerShown: true })} />
+                    options={({ route }: { route: { params?: { name?: string } } }) => ({ title: route.params?.name, headerShown: true, ...TransitionPresets.SlideFromRightIOS, })} />
                 <Stack.Screen name="SongSreen"
                     component={SongSreen}
-                    options={({ route }: { route: { params?: { name?: string } } }) => ({ title: route.params?.name, headerShown: false })} />
+                    options={({ route }: { route: { params?: { name?: string } } }) =>
+                    ({
+
+                        title: route.params?.name,
+                        headerShown: false,
+                        gestureDirection: 'vertical',
+                        transitionSpec: {
+                            open: {
+                                animation: 'timing',
+                                config: { duration: 300 },
+                            },
+                            close: {
+                                animation: 'timing',
+                                config: { duration: 300 },
+                            },
+                        },
+                        cardStyleInterpolator: ({ current, next, layouts }) => {
+                            return {
+                                cardStyle: {
+                                    transform: [
+                                        {
+                                            translateY: current.progress.interpolate({
+                                                inputRange: [0, 1],
+                                                outputRange: [layouts.screen.height, 0],
+                                            }),
+                                        },
+                                        {
+                                            translateY: next
+                                                ? next.progress.interpolate({
+                                                    inputRange: [0, 1],
+                                                    outputRange: [0, -layouts.screen.height],
+                                                })
+                                                : 1,
+                                        },
+                                    ],
+                                },
+                            };
+                        },
+                    })} />
             </Stack.Navigator>
         </NavigationContainer>
     );

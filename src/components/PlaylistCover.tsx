@@ -36,35 +36,22 @@ const styles = StyleSheet.create({
   sortDescription: {
   },
 });
-
-
-// Usage:
 const Cover: React.FC<coverProps> = ({ title, sortDescription, thumbnail ,handleClickPlaylist}) => {
-
   return (
     <View>
       <TouchableOpacity onPress={handleClickPlaylist}>
       <View style={styles.roundedContainer}>
           <Image style={styles.thumbnail} source={{ uri: thumbnail }} alt={title} />
-      
       </View>
-
       <View style={styles.contentContainer}>
-        {/* Title */}
-       
           <Text style={styles.title} numberOfLines={1}>
             {title}
           </Text>
-        
-        {/* End Title */}
-
-        {/* Sort Description */}
         {sortDescription && (
           <Text style={styles.sortDescription} numberOfLines={2}>
             {sortDescription}
           </Text>
         )}
-        {/* End Sort Description */}
       </View>
       </TouchableOpacity>
     </View>

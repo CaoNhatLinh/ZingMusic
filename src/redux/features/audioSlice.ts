@@ -20,7 +20,7 @@ interface AudioState {
   autoPlay: boolean;
   playlistSong: Array<object>;
   isLyric: boolean;
-  currentSound: object;
+  titlePlayList: string;
 }
 
 const initialState: AudioState = {
@@ -43,7 +43,7 @@ const initialState: AudioState = {
   autoPlay: false,
   playlistSong: [],
   isLyric: false,
-  currentSound: {},
+  titlePlayList: "",
 };
 
 const audioSlice = createSlice({
@@ -95,9 +95,10 @@ const audioSlice = createSlice({
     setOpenLyric: (state, action: PayloadAction<boolean>) => {
       state.isLyric = action.payload;
     },
-    setCurrentSound: (state, action: PayloadAction<object>) => {
-      state.currentSound = action.payload
-    }
+    
+    SetTitlePlayList: (state, action: PayloadAction<string>) => {
+      state.titlePlayList = action.payload;
+    },
   },
 });
 
@@ -115,6 +116,6 @@ export const {
   setPlaylistSong,
   setCurrnetIndexPlaylist,
   setOpenLyric,
-  setCurrentSound,
+  SetTitlePlayList
 } = audioSlice.actions;
 export default audioSlice.reducer;

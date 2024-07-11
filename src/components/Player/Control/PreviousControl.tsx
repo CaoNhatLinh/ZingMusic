@@ -6,8 +6,7 @@ import { useAppDispatch, useAppSelector } from "../../../hooks/redux";
 
 const PreviousControl: React.FC = () => {
   const currnetIndexPlaylist = useAppSelector((state) => state.audio.currnetIndexPlaylist);
-  const playlistSong = useAppSelector((state) => state.audio.playlistSong);
-
+  const playlistSong = useAppSelector((state) => state.audio.playlistSong) as { encodeId: string }[];
   const dispatch = useAppDispatch();
 
   const handlePreviousSong = () => {
@@ -32,8 +31,8 @@ const PreviousControl: React.FC = () => {
   }
 
   return (
-    <TouchableOpacity onPress={handlePreviousSong} style={{ width: 42, height: 42, marginHorizontal: 2, marginVertical: 0 }}>
-      <Icon name="backward-step" size={24} color="white" />
+    <TouchableOpacity onPress={handlePreviousSong}>
+      <Icon name="backward-step" size={32} color="white" />
     </TouchableOpacity>
   );
 };

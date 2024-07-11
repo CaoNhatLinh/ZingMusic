@@ -6,7 +6,7 @@ import { useAppDispatch, useAppSelector } from "../../../hooks/redux";
 
 const NextControl: React.FC = () => {
   const currnetIndexPlaylist = useAppSelector((state) => state.audio.currnetIndexPlaylist);
-  const playlistSong = useAppSelector((state) => state.audio.playlistSong);
+  const playlistSong = useAppSelector((state) => state.audio.playlistSong) as { encodeId: string }[];
 
   const dispatch = useAppDispatch();
 
@@ -19,7 +19,6 @@ const NextControl: React.FC = () => {
       } else {
         currentIndex = currnetIndexPlaylist + 1;
       }
-      console.log("currentIndex", currentIndex);
       dispatch(setCurrnetIndexPlaylist(currentIndex));
       dispatch(setSongId(playlistSong[currentIndex].encodeId));
       dispatch(changeIconPlay(true));
@@ -27,8 +26,8 @@ const NextControl: React.FC = () => {
   };
 
   return (
-    <TouchableOpacity onPress={handleNextSong} style={{ width: 42, height: 42, marginHorizontal: 2, marginVertical: 0 }}>
-      <Icon name="forward-step" size={24} color="white"/>
+    <TouchableOpacity onPress={handleNextSong}>
+      <Icon name="forward-step" size={32} color="white"/>
     </TouchableOpacity>
   );
 };

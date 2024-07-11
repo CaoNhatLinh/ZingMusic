@@ -7,7 +7,9 @@ import colors from "../../../assets/colors";
 import { useAppDispatch } from "../../../hooks/redux";
 import { setCurrentTime, setDuration } from "../../../redux/features/audioSlice";
 import { useAudio } from "../../../utils/AudioContext"
-const width = Dimensions.get('window').width;
+const win = Dimensions.get('window');
+const width = win.width;
+
 const SongSliderControl: React.FC = () => {
     const {
         audioRef,
@@ -28,19 +30,19 @@ const SongSliderControl: React.FC = () => {
             audioRef.current?.setCurrentTime(value);
         }
     }
+    
     return (
         audioRef?
-           
-            <View style={{ justifyContent: "center", flexDirection: "row" }}>
+            <View style={{ justifyContent: "center", flexDirection: "row" , alignItems:"center"}}>
                 <Text style={{ color: colors.white }} >{formatTime(Math.floor(currentTime))}</Text>
                 <Slider
-                    style={{ width: width * 0.8, height: 40 }}
+                    style={{ width: win.width * 0.8, height: win.height * 0.03}}
                     minimumValue={0}
                     maximumValue={Math.floor(duration)}
                     step={1}
-                    minimumTrackTintColor="#1EB1FC"
-                    maximumTrackTintColor="#8E8E93"
-                    thumbTintColor="#1EB1FC"
+                    minimumTrackTintColor={colors.white}
+                    maximumTrackTintColor= {colors.white}
+                    thumbTintColor={colors.white}
                     value={Math.floor(currentTime)}
                     onValueChange={handleChangedSlider}
                 />

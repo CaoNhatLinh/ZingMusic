@@ -5,7 +5,7 @@ import { getDetailPlaylist } from "../api/detailPlaylist";
 import DetailPlaylistInfo from "../components/DetailPlaylistInfo";
 import TrackListDetailPlaylist from "../components/TrackPlaylist";
 import { useAppDispatch } from "../hooks/redux";
-import { setPlaylistSong } from "../redux/features/audioSlice";
+import { setPlaylistSong, SetTitlePlayList } from "../redux/features/audioSlice";
 import { ScrollView } from "react-native-gesture-handler";
 import colors from "../assets/colors";
 
@@ -32,10 +32,10 @@ const Playlist: React.FC = ({navigation}:any) => {
       
       const playlistId = (route.params as { playlistId?: string })?.playlistId ?? "";
       if (playlistId) {
-       
         const detailPlaylist: playlistType = await getDetailPlaylist(playlistId);
         setDataDetailPlaylist(detailPlaylist);
         dispatch(setPlaylistSong(detailPlaylist.song.items));
+        dispatch(SetTitlePlayList(detailPlaylist.title));
       }
     })();
   }, [route.params,dispatch]);

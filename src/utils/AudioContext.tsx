@@ -67,18 +67,15 @@ export const AudioProvider: FC<AudioProviderProps> = ({ children }) => {
     intervalRef.current = setInterval(() => {
       if (audioRef.current) {
         audioRef.current.getCurrentTime((seconds) => {
-          console.log('seconds', seconds);
           dispatch(setCurrentTime(seconds));
         });
       }
     }, 1000);
-    console.log('play', intervalRef.current);
   };
 
   const pauseAudio = () => {
     audioRef.current?.pause();
     if (intervalRef.current) {
-      console.log(' pause', intervalRef.current);
       clearInterval(intervalRef.current);
     }
     setStatus('pause');

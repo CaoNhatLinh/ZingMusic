@@ -38,14 +38,10 @@ const Player: React.FC = () => {
   const isLoop = useAppSelector((state) => state.audio.isLoop)
   const dispath = useAppDispatch()
   const RoutesongId = (route.params as { encodeId?: string })?.encodeId ?? ""
-
   const currentSongId = useAppSelector((state) => state.audio.songId)
   function isUpdate() {
-    console.log("audio", audioRef.current)
-    console.log("RoutesongId", RoutesongId)
-    console.log("currentSongId", currentSongId)
     if (RoutesongId != currentSongId) {
-      dispath(setSongId(RoutesongId))
+      
       return true
     }
     return false
@@ -63,6 +59,7 @@ const Player: React.FC = () => {
               if (audioRef.current) {
                 audioRef.current.stop()
               }
+              console.log("initialize audio")
               const songID = playlistSong[currnetIndexPlaylist].encodeId
               const linkSong: songType = await getSong(songID)
               linkSong[128] ? dispath(setSrcAudio(linkSong[128])) : dispath(setSrcAudio(""))
@@ -77,6 +74,7 @@ const Player: React.FC = () => {
                 }
               ))
               initializeAudio(linkSong[128])
+              dispath(setSongId(songID))
             }
           }
         } catch (err) {
@@ -87,18 +85,16 @@ const Player: React.FC = () => {
   }, [dispath, currnetIndexPlaylist])
   return (
     <View>
-            <Text style={{ color: colors.white }}>{status}</Text>
       {
-        status!='loading' && status!='error'
+        status == 'play' || status == 'pause'
           ?
           <View>
-            <Controls/>
+            <Controls />
           </View>
           :
           <ActivityIndicator />
       }
 
-      {/* Replace the audio element with the appropriate Audio component */}
       {/* <Audio
         ref={audioRef}
         source={{uri: srcAudio}}

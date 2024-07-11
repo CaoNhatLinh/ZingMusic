@@ -25,7 +25,7 @@ const TrackListDetailPlaylist: React.FC<{ items: [] }> = ({ items }) => {
       dispatch(setCurrnetIndexPlaylist(currentIndex));
       dispatch(changeIconPlay(true));
       dispatch(setAutoPlay(true));
-      navigation.navigate('SongSreen' as never, { encodeId: encodeId });
+      navigation.navigate('SongSreen' as never, { encodeId });
     } 
   };
   return (

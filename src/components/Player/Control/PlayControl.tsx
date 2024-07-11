@@ -5,6 +5,7 @@ import Sound from "react-native-sound";
 import { useAppDispatch, useAppSelector } from "../../../hooks/redux";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { useAudio } from "../../../utils/AudioContext";
+import colors from "../../../assets/colors";
 const PlayControl: React.FC= () => {
     const {
       audioRef,
@@ -26,16 +27,16 @@ const PlayControl: React.FC= () => {
       }
     }
   };
-
+  
   return (
     <TouchableOpacity
-      style={{ width: 42, height: 42, marginHorizontal: 2, marginVertical: 0 }}
+      style={{ width: 72, height: 72,  borderRadius:999,borderColor:colors.white,borderWidth:2,justifyContent:"center",alignItems:"center"}}
       onPress={handlePlaySong}
     >
       {isPlay ? (
-        <Icon name="pause" size={24} color="white" />
+        <Icon name="pause" size={32} color="white" />
       ) : (
-        <Icon name="play" size={24} color="white" />
+        <Icon name="play" size={32} color="white" />
       )}
     </TouchableOpacity>
   );

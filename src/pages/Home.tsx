@@ -4,7 +4,6 @@ import { getHomePlayList } from "../api/home"
 import Loading from "../components/Loading"
 import { ActivityIndicator, ScrollView, Text, View } from "react-native"
 import colors from "../assets/colors"
-import { useNavigation } from "@react-navigation/native"
 interface typePlaylistCover{
   items: []
   title: string
@@ -13,7 +12,6 @@ interface typePlaylistCover{
   sortDescription: string
   sectionId: string
 }
-
 const Home: React.FC = ({ navigation }:any) => {
   const [dataHome, setdataHome] = useState<Array<object> | undefined>()
   const handleClickPlaylist = ({ playlistId ,name}: { playlistId: string,name:string }) => {
@@ -21,7 +19,6 @@ const Home: React.FC = ({ navigation }:any) => {
   }
   useEffect(() => {
     (
-      
       async () => {
         setdataHome(await getHomePlayList())
       }
@@ -43,7 +40,6 @@ return (
                         </Text>
                         <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', marginTop: 11 }}>
                             {
-                               
                                e.items.map((element: typePlaylistCover, index: number) => (
                                 <PlaylistCover
                                   key={index}

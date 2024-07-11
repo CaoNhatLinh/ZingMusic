@@ -6,35 +6,24 @@ import PreviousControl from "./PreviousControl"
 import RepeatControl from "./RepeatControl"
 import ShuffleControl from "./ShuffleControl"
 import TrackInfo from "./TrackInfo"
-import VolumeControl from "./VolumeControl"
-import VolumeSliderControl from "./VolumeSliderControl"
 
-import { Button, Dimensions, Text, View   } from "react-native"
+import { Dimensions, Text, View   } from "react-native"
 import Header from "./header"
-import colors from "../../../assets/colors"
 import SongSliderControl from "./SongSliderControl"
-import { useAppDispatch, useAppSelector } from "../../../hooks/redux"
-import { setCurrentTime } from "../../../redux/features/audioSlice"
-import { useAudio } from "../../../utils/AudioContext"
+import { useAppSelector } from "../../../hooks/redux"
+import { useNavigation } from "@react-navigation/native"
 
 const win = Dimensions.get('window');
 const Control: React.FC= () => {
-  const {
-    audioRef,
-    status,
-    errorMessage,
-    initializeAudio,
-    playAudio,
-    pauseAudio,
-    stopAudio,
-  } = useAudio();
+  const  navigation = useNavigation();
+const titlePlayList = useAppSelector((state) => state.audio.titlePlayList);
   return (
     <>
-      {/* <SongSliderControl auRef={auRef} /> */}
+      
 
       <View>
-        <Header message="hhhsssssssssss" onDownPress={function (): void {
-
+        <Header title={titlePlayList} onDownPress={function (): void {
+          navigation.goBack()
         }} onQueuePress={function (): void {
           throw new Error("Function not implemented.")
         }} onMessagePress={function (): void {
@@ -43,8 +32,8 @@ const Control: React.FC= () => {
 
         <TrackInfo />
         <SongSliderControl/>
-        
-        <View style={{ flex: 1, justifyContent:"space-between", flexDirection:"row", alignItems: "center" }}>
+       
+        <View style={{ height:win.height*0.15, justifyContent:"space-between",  alignItems: "center", flexDirection:"row" ,paddingHorizontal:20}}>
             <PreviousControl />
             <PlayControl/>
             <NextControl />
