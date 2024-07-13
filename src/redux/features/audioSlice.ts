@@ -91,6 +91,7 @@ const audioSlice = createSlice({
     },
     setCurrnetIndexPlaylist: (state, action: PayloadAction<number>) => {
       state.currnetIndexPlaylist = action.payload;
+     
     },
     setOpenLyric: (state, action: PayloadAction<boolean>) => {
       state.isLyric = action.payload;
@@ -99,6 +100,7 @@ const audioSlice = createSlice({
     SetTitlePlayList: (state, action: PayloadAction<string>) => {
       state.titlePlayList = action.payload;
     },
+    
   },
 });
 
@@ -116,6 +118,6 @@ export const {
   setPlaylistSong,
   setCurrnetIndexPlaylist,
   setOpenLyric,
-  SetTitlePlayList
+  SetTitlePlayList,
 } = audioSlice.actions;
 export default audioSlice.reducer;

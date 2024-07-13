@@ -1,12 +1,23 @@
-import React from "react"
-import IconShuffle from "../../Icons/Shuffle"
+import React from "react";
+import { TouchableOpacity, StyleSheet } from "react-native";
+import Icon from "react-native-vector-icons/FontAwesome6";
 
 const ShuffleControl: React.FC = () => {
-  return(
-    <button className="mx-2 my-0 style__buttons" title="Shuffle">
-      <IconShuffle setColor="var(--color-text)" setWidth="16px" setHeight="16px" />
-    </button>
-  )
-}
+  return (
+    <TouchableOpacity
+      style={styles.button}
+      accessibilityLabel="Shuffle"
+    >
+      <Icon name="shuffle" size={24} color="white" />
+    </TouchableOpacity>
+  );
+};
 
-export default ShuffleControl
+const styles = StyleSheet.create({
+  button: {
+    marginHorizontal: 2,
+    marginVertical: 0,
+  },
+});
+
+export default ShuffleControl;

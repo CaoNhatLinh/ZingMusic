@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useRef, useState, ReactNode, FC } from 'react';
 import Sound from 'react-native-sound';
-import { useAppDispatch } from '../hooks/redux';
-import { setCurrentTime, setDuration } from '../redux/features/audioSlice';
+import { useAppDispatch, useAppSelector } from '../hooks/redux';
+import { changeIconPlay, setCurrentTime, setCurrnetIndexPlaylist, setDuration, setSongId } from '../redux/features/audioSlice';
 
 interface AudioContextType {
   audioRef: React.MutableRefObject<Sound | null>;
@@ -9,9 +9,10 @@ interface AudioContextType {
   status: AudioStatusType;
   errorMessage: string;
   initializeAudio: (url: string) => void;
-  playAudio: () => void;
+  playAudio: (isLoop: boolean) => void;
   pauseAudio: () => void;
   stopAudio: () => void;
+  nextSong:(playlistSong:any,currnetIndexPlaylist:number) => void;
 }
 
 type AudioStatusType = 'loading' | 'success' | 'error' | 'play' | 'pause' | 'stop';
@@ -49,13 +50,36 @@ export const AudioProvider: FC<AudioProviderProps> = ({ children }) => {
         dispatch(setCurrentTime(0));
         dispatch(setDuration(sound.getDuration()));
         audioRef.current = sound;
-        playAudio();
+        sound.setVolume(1);
+        playAudio(false);
       }
     });
   };
-
-  const playAudio = () => {
-    audioRef.current?.play((success) => {
+  const nextSong = ({playlistSong,currnetIndexPlaylist}: { playlistSong: any, currnetIndexPlaylist: number }) => {
+    console.log(playlistSong)
+    console.log(currnetIndexPlaylist)
+    if (playlistSong !== undefined && playlistSong.length > 0) {
+      let currentIndex;
+      
+      console.log(currnetIndexPlaylist)
+      if (currnetIndexPlaylist === playlistSong.length - 1) {
+        currentIndex = 0;
+      } else {
+        console.log(currnetIndexPlaylist)
+        currentIndex = currnetIndexPlaylist + 1;
+        dispatch(setCurrnetIndexPlaylist(currentIndex));
+        console.log("setCurrnetIndexPlaylist")
+        dispatch(setSongId(playlistSong[currentIndex].encodeId));
+        console.log("setSongId")
+        dispatch(changeIconPlay(true));
+        console.log("changeIconPlay")
+      }
+     
+    }
+  };
+  const playAudio = (isLoop:boolean) => {
+    const loop = isLoop ? -1 : 0;
+    audioRef.current?.setNumberOfLoops(loop).play((success) => {
       if (success) {
         stopAudio();
         setStatus('loading');
@@ -65,6 +89,7 @@ export const AudioProvider: FC<AudioProviderProps> = ({ children }) => {
       }
     });
     setStatus('play');
+    
     intervalRef.current = setInterval(() => {
       if (audioRef.current) {
         audioRef.current.getCurrentTime((seconds) => {
@@ -91,6 +116,7 @@ export const AudioProvider: FC<AudioProviderProps> = ({ children }) => {
     }
     setStatus('stop');
   };
+ 
   return (
     <AudioContext.Provider value={{
       audioRef,
@@ -101,6 +127,7 @@ export const AudioProvider: FC<AudioProviderProps> = ({ children }) => {
       playAudio,
       pauseAudio,
       stopAudio,
+      nextSong
     }}
     >
       {children}

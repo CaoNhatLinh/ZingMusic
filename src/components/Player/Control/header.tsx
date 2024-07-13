@@ -5,7 +5,6 @@ import colors from "../../../assets/colors";
 import { memo } from "react";
 const styles = StyleSheet.create({
   container: {
-    
     justifyContent: "space-between",
     alignItems: "center",
     backgroundColor: "#000",
@@ -16,6 +15,7 @@ const styles = StyleSheet.create({
     color: colors.white,
     fontSize: 14,
     fontWeight: "bold",
+    textAlign: "center"
   }
 });
 

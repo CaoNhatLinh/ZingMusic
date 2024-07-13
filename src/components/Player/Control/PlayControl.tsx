@@ -6,6 +6,7 @@ import { useAppDispatch, useAppSelector } from "../../../hooks/redux";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { useAudio } from "../../../utils/AudioContext";
 import colors from "../../../assets/colors";
+
 const PlayControl: React.FC= () => {
     const {
       audioRef,
@@ -14,6 +15,7 @@ const PlayControl: React.FC= () => {
     } = useAudio();
   const isPlay = useAppSelector((state) => state.audio.isPlay);
   const dispatch = useAppDispatch();
+  const isLoop = useAppSelector((state) => state.audio.isLoop);
   const handlePlaySong = () => {
     if (isPlay === true) {
       dispatch(changeIconPlay(false));
@@ -23,7 +25,7 @@ const PlayControl: React.FC= () => {
     } else {
       dispatch(changeIconPlay(true));
       if (audioRef) {
-        playAudio();
+        playAudio(isLoop);
       }
     }
   };
@@ -41,5 +43,4 @@ const PlayControl: React.FC= () => {
     </TouchableOpacity>
   );
 };
-
 export default PlayControl;

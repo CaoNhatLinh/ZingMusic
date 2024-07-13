@@ -1,38 +1,34 @@
-import React from "react"
-import IconRepeat from "../../Icons/Repeat"
-import { useAppDispatch, useAppSelector } from "../../../hooks/redux"
-import { setLoop } from "../../../redux/features/audioSlice"
-
+import React from "react";
+import { View, TouchableOpacity } from "react-native";
+import IconRepeat from "../../Icons/Repeat";
+import { useAppDispatch, useAppSelector } from "../../../hooks/redux";
+import { setLoop } from "../../../redux/features/audioSlice";
+import Icon from "react-native-vector-icons/FontAwesome6";
+import colors from "../../../assets/colors";
 const RepeatControl: React.FC = () => {
-
-  const isLoop = useAppSelector((state) => state.audio.isLoop)
-  const dispath = useAppDispatch()
+  const isLoop = useAppSelector((state) => state.audio.isLoop);
+  const dispatch = useAppDispatch();
 
   const handleRepeat = () => {
-    if(isLoop) {
-      dispath(setLoop(false))
-    } else {
-      dispath(setLoop(true))
-    }
-  }
+    
+      dispatch(setLoop(!isLoop));
+  };
 
-  return(
-    <div
-      onClick={handleRepeat}
-    >
-      {
-        isLoop
-        ?
-        <button className="mx-2 my-0 style__buttons" title="Repeat">
-          <IconRepeat setColor="var(--color-primary)" setWidth="16px" setHeight="16px" />
-        </button>
-        :
-        <button className="mx-2 my-0 style__buttons" title="Repeat">
-          <IconRepeat setColor="var(--color-text)" setWidth="16px" setHeight="16px" />
-        </button>
-      }
-    </div>
-  )
-}
+  return (
+    <View>
+      <TouchableOpacity onPress={handleRepeat}>
+        {isLoop ? (
+          <Icon
+           name="repeat" size={36} color={colors.white}
+          />
+        ) : (
+          <Icon
+           name="repeat" size={24} color={colors.facebook}
+          />
+        )}
+      </TouchableOpacity>
+    </View>
+  );
+};
 
-export default RepeatControl
+export default RepeatControl;

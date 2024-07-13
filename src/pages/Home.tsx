@@ -35,7 +35,7 @@ return (
                 ?
                 dataHome.map((e: any, i: number) => (
                     <View key={i}>
-                        <Text style={{ justifyContent: 'space-between', alignItems: 'flex-end', fontSize: 28, fontWeight: 'bold', color: colors.darkText, marginTop: 9, marginBottom: 3 }}>
+                        <Text style={{ justifyContent: 'space-between', alignItems: 'flex-end', fontSize: 24, fontWeight: 'bold', color: colors.white, marginTop: 9, marginBottom: 3 }}>
                             {(e.title === "") ? (e.sectionId.slice(1)) : (e.title)}
                         </Text>
                         <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', marginTop: 11 }}>
