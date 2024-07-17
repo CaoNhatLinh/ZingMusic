@@ -2,7 +2,6 @@ import React, { useState } from "react"
 import { Image, Text, TouchableOpacity, View,StyleSheet } from "react-native"
 import colors from "../assets/colors"
 
-
 interface coverProps {
   title: string
   sortDescription?: string

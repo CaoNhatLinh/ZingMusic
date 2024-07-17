@@ -15,7 +15,6 @@ const PlayControl: React.FC= () => {
     } = useAudio();
   const isPlay = useAppSelector((state) => state.audio.isPlay);
   const dispatch = useAppDispatch();
-  const isLoop = useAppSelector((state) => state.audio.isLoop);
   const handlePlaySong = () => {
     if (isPlay === true) {
       dispatch(changeIconPlay(false));
@@ -25,7 +24,7 @@ const PlayControl: React.FC= () => {
     } else {
       dispatch(changeIconPlay(true));
       if (audioRef) {
-        playAudio(isLoop);
+        playAudio();
       }
     }
   };

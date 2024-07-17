@@ -29,13 +29,13 @@ const Player: React.FC = () => {
 
   const {
     status,
+    playAudio,
     initializeAudio,
   } = useAudio();
   const route = useRoute()
   const currnetIndexPlaylist = useAppSelector((state) => state.audio.currnetIndexPlaylist)
   const playlistSong: any = useAppSelector((state) => state.audio.playlistSong)
   const audioRef = useRef<Sound | null>(null)
-  const isLoop = useAppSelector((state) => state.audio.isLoop)
   const dispath = useAppDispatch()
   const RoutesongId = (route.params as { encodeId?: string })?.encodeId ?? ""
   const currentSongId = useAppSelector((state) => state.audio.songId)
@@ -72,6 +72,7 @@ const Player: React.FC = () => {
                   artists: infoSong.artists,
                 }
               ))
+             
               initializeAudio(linkSong[128])
               dispath(setSongId(songID))
             }
@@ -81,7 +82,15 @@ const Player: React.FC = () => {
         }
       }
     )()
-  }, [dispath, currnetIndexPlaylist])
+  }, [dispath, currentSongId])
+
+
+  // useEffect(() => {
+  //   if (status === "success") {
+  //     playAudio()
+  //   }
+  // }, [status])
+
   return (
     <View>
       {

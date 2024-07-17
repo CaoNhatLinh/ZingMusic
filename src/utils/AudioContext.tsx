@@ -1,7 +1,7 @@
-import React, { createContext, useContext, useRef, useState, ReactNode, FC } from 'react';
+import React, { createContext, useContext, useRef, useState, ReactNode, FC, useCallback } from 'react';
 import Sound from 'react-native-sound';
 import { useAppDispatch, useAppSelector } from '../hooks/redux';
-import { changeIconPlay, setCurrentTime, setCurrnetIndexPlaylist, setDuration, setSongId } from '../redux/features/audioSlice';
+import { changeIconPlay, setCurrentTime, setCurrnetIndexPlaylist, setDuration, setLoop, setSongId } from '../redux/features/audioSlice';
 
 interface AudioContextType {
   audioRef: React.MutableRefObject<Sound | null>;
@@ -9,10 +9,12 @@ interface AudioContextType {
   status: AudioStatusType;
   errorMessage: string;
   initializeAudio: (url: string) => void;
-  playAudio: (isLoop: boolean) => void;
+  playAudio: () => void;
   pauseAudio: () => void;
   stopAudio: () => void;
-  nextSong:(playlistSong:any,currnetIndexPlaylist:number) => void;
+  handleRepeat:()=>void;
+  nextSong: (playlistSong: any, currnetIndexPlaylist: number) => void;
+  previousSong: (playlistSong: any, currnetIndexPlaylist: number) => void;
 }
 
 type AudioStatusType = 'loading' | 'success' | 'error' | 'play' | 'pause' | 'stop';
@@ -25,71 +27,77 @@ export const useAudio = (): AudioContextType => {
   }
   return context;
 };
-
 interface AudioProviderProps {
   children: ReactNode;
 }
 
 export const AudioProvider: FC<AudioProviderProps> = ({ children }) => {
   const dispatch = useAppDispatch();
-  const [status, setStatus] = useState<AudioStatusType >('loading');
-  const [errorMessage, setErrorMessage] = useState('');
-  const audioRef = useRef<Sound | null>(null);
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+const [status, setStatus] = useState<AudioStatusType>('loading');
+const [errorMessage, setErrorMessage] = useState('');
+const audioRef = useRef<Sound | null>(null);
+const intervalRef = useRef<NodeJS.Timeout | null>(null);
+const playlistSong = useAppSelector((state) => state.audio.playlistSong);
+const currnetIndexPlaylist = useAppSelector((state) => state.audio.currnetIndexPlaylist);
+const isLoop = useAppSelector((state) => state.audio.isLoop);
   const initializeAudio = (url: string) => {
     if (audioRef.current) {
       stopAudio();
     }
     const sound = new Sound(url, Sound.MAIN_BUNDLE, (error) => {
       if (error) {
-        setStatus('error');
         setErrorMessage(error.message);
+        setStatus('error');
       } else {
-        setStatus('success');
         setErrorMessage('');
         dispatch(setCurrentTime(0));
         dispatch(setDuration(sound.getDuration()));
-        audioRef.current = sound;
         sound.setVolume(1);
-        playAudio(false);
+        audioRef.current = sound;
+        setStatus('success');
+        playAudio()
       }
     });
   };
-  const nextSong = ({playlistSong,currnetIndexPlaylist}: { playlistSong: any, currnetIndexPlaylist: number }) => {
-    console.log(playlistSong)
-    console.log(currnetIndexPlaylist)
+ 
+ 
+  const nextSong = (playlistSong: any, currnetIndexPlaylist: number) => {
     if (playlistSong !== undefined && playlistSong.length > 0) {
       let currentIndex;
-      
-      console.log(currnetIndexPlaylist)
       if (currnetIndexPlaylist === playlistSong.length - 1) {
         currentIndex = 0;
       } else {
-        console.log(currnetIndexPlaylist)
-        currentIndex = currnetIndexPlaylist + 1;
+        currentIndex = (currnetIndexPlaylist + 1) % playlistSong.length;
         dispatch(setCurrnetIndexPlaylist(currentIndex));
-        console.log("setCurrnetIndexPlaylist")
         dispatch(setSongId(playlistSong[currentIndex].encodeId));
-        console.log("setSongId")
         dispatch(changeIconPlay(true));
-        console.log("changeIconPlay")
+       
       }
-     
     }
   };
-  const playAudio = (isLoop:boolean) => {
-    const loop = isLoop ? -1 : 0;
-    audioRef.current?.setNumberOfLoops(loop).play((success) => {
-      if (success) {
-        stopAudio();
-        setStatus('loading');
+  const previousSong = (playlistSong: any, currnetIndexPlaylist: number) => {
+    if (playlistSong !== undefined && playlistSong.length > 0) {
+      let currentIndex;
+      if (currnetIndexPlaylist === playlistSong.length - 1) {
+        currentIndex = 0;
       } else {
-        setStatus('error');
-        setErrorMessage('Error playing audio');
+        console.log(currnetIndexPlaylist);
+        currentIndex = (currnetIndexPlaylist - 1) % playlistSong.length;
+        dispatch(setCurrnetIndexPlaylist(currentIndex));
+        dispatch(setSongId(playlistSong[currentIndex].encodeId));
+        dispatch(changeIconPlay(true));
+       
+      }
+    }
+  };
+  const playAudio = () => {
+    audioRef.current?.play((success) => {
+      if (success) {
+        nextSong(playlistSong, currnetIndexPlaylist);
+      } else {
+        console.log('playback failed due to audio decoding errors');
       }
     });
-    setStatus('play');
-    
     intervalRef.current = setInterval(() => {
       if (audioRef.current) {
         audioRef.current.getCurrentTime((seconds) => {
@@ -97,6 +105,7 @@ export const AudioProvider: FC<AudioProviderProps> = ({ children }) => {
         });
       }
     }, 1000);
+    setStatus('play');
   };
 
   const pauseAudio = () => {
@@ -105,9 +114,8 @@ export const AudioProvider: FC<AudioProviderProps> = ({ children }) => {
       clearInterval(intervalRef.current);
     }
     setStatus('pause');
-    
   };
-  
+
   const stopAudio = () => {
     audioRef.current?.stop();
     audioRef.current?.release();
@@ -116,7 +124,11 @@ export const AudioProvider: FC<AudioProviderProps> = ({ children }) => {
     }
     setStatus('stop');
   };
- 
+  
+  const handleRepeat = () => {
+    dispatch(setLoop(!isLoop));
+    audioRef.current?.setNumberOfLoops(!isLoop ? -1 : 0);
+};
   return (
     <AudioContext.Provider value={{
       audioRef,
@@ -127,7 +139,9 @@ export const AudioProvider: FC<AudioProviderProps> = ({ children }) => {
       playAudio,
       pauseAudio,
       stopAudio,
-      nextSong
+      nextSong,
+      previousSong,
+      handleRepeat
     }}
     >
       {children}

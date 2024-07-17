@@ -2,7 +2,6 @@ import React, { useState } from "react"
 import LyricControl from "./LyricControl"
 // import NextControl from "./NextControl"
 import PlayControl from "./PlayControl"
-import PreviousControl from "./PreviousControl"
 import RepeatControl from "./RepeatControl"
 import ShuffleControl from "./ShuffleControl"
 import TrackInfo from "./TrackInfo"
@@ -18,14 +17,15 @@ import Icon from "react-native-vector-icons/FontAwesome6";
 const win = Dimensions.get('window');
 const Control: React.FC = () => {
   const {
-    handleNextSong
+    nextSong,
+    previousSong,
   } = useAudio();
   const navigation = useNavigation();
   const titlePlayList = useAppSelector((state) => state.audio.titlePlayList);
+  const playlistSong = useAppSelector((state) => state.audio.playlistSong);
+  const currnetIndexPlaylist = useAppSelector((state) => state.audio.currnetIndexPlaylist);
   return (
     <>
-
-
       <View>
         <Header title={titlePlayList} onDownPress={function (): void {
           navigation.goBack()
@@ -40,19 +40,15 @@ const Control: React.FC = () => {
 
           <View style={{ height: win.height * 0.2, justifyContent: "space-between", alignItems: "center", flexDirection: "row" }}>
             <ShuffleControl />
-            <PreviousControl />
+            <TouchableOpacity onPress={()=>previousSong(playlistSong,currnetIndexPlaylist)}>
+              <Icon name="backward-step" size={32} color="white" />
+            </TouchableOpacity>
             <PlayControl />
-            <TouchableOpacity onPress={()=>{
-              handleNextSong}}>
+            <TouchableOpacity onPress={() => nextSong(playlistSong, currnetIndexPlaylist)}>
               <Icon name="forward-step" size={32} color="white" />
             </TouchableOpacity>
             <RepeatControl />
           </View>
-          {/* End Mid Controls Button */}
-
-          {/* Right Controls Button */}
-
-          {/* End Right Controls Button */}
         </View>
       </View>
     </>
