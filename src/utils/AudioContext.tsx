@@ -30,7 +30,9 @@ export const useAudio = (): AudioContextType => {
 interface AudioProviderProps {
   children: ReactNode;
 }
-
+const getRandomIndex = (max:number) => {
+  return Math.floor(Math.random() * max);
+};
 export const AudioProvider: FC<AudioProviderProps> = ({ children }) => {
   const dispatch = useAppDispatch();
 const [status, setStatus] = useState<AudioStatusType>('loading');
@@ -40,6 +42,7 @@ const intervalRef = useRef<NodeJS.Timeout | null>(null);
 const playlistSong = useAppSelector((state) => state.audio.playlistSong);
 const currnetIndexPlaylist = useAppSelector((state) => state.audio.currnetIndexPlaylist);
 const isLoop = useAppSelector((state) => state.audio.isLoop);
+const isShuffle = useAppSelector((state) => state.audio.isShuffle);  
   const initializeAudio = (url: string) => {
     if (audioRef.current) {
       stopAudio();
@@ -60,18 +63,22 @@ const isLoop = useAppSelector((state) => state.audio.isLoop);
     });
   };
  
- 
+
+  
   const nextSong = (playlistSong: any, currnetIndexPlaylist: number) => {
     if (playlistSong !== undefined && playlistSong.length > 0) {
       let currentIndex;
       if (currnetIndexPlaylist === playlistSong.length - 1) {
         currentIndex = 0;
       } else {
+        if (isShuffle) {
+          currentIndex = getRandomIndex(playlistSong.length);
+        } else {
         currentIndex = (currnetIndexPlaylist + 1) % playlistSong.length;
+        }
         dispatch(setCurrnetIndexPlaylist(currentIndex));
         dispatch(setSongId(playlistSong[currentIndex].encodeId));
         dispatch(changeIconPlay(true));
-       
       }
     }
   };
@@ -93,6 +100,7 @@ const isLoop = useAppSelector((state) => state.audio.isLoop);
   const playAudio = () => {
     audioRef.current?.play((success) => {
       if (success) {
+
         nextSong(playlistSong, currnetIndexPlaylist);
       } else {
         console.log('playback failed due to audio decoding errors');
@@ -129,6 +137,8 @@ const isLoop = useAppSelector((state) => state.audio.isLoop);
     dispatch(setLoop(!isLoop));
     audioRef.current?.setNumberOfLoops(!isLoop ? -1 : 0);
 };
+
+
   return (
     <AudioContext.Provider value={{
       audioRef,
@@ -141,7 +151,7 @@ const isLoop = useAppSelector((state) => state.audio.isLoop);
       stopAudio,
       nextSong,
       previousSong,
-      handleRepeat
+      handleRepeat,
     }}
     >
       {children}

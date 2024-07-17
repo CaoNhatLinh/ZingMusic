@@ -17,6 +17,7 @@ interface AudioState {
   duration: number;
   volume: number;
   isLoop: boolean;
+  isShuffle:boolean,
   autoPlay: boolean;
   playlistSong: Array<object>;
   isLyric: boolean;
@@ -40,6 +41,7 @@ const initialState: AudioState = {
   duration: 0,
   volume: 0.5,
   isLoop: false,
+  isShuffle: false,
   autoPlay: false,
   playlistSong: [],
   isLyric: false,
@@ -83,6 +85,9 @@ const audioSlice = createSlice({
     setLoop: (state, action: PayloadAction<boolean>) => {
       state.isLoop = action.payload;
     },
+    setShuffle: (state, action: PayloadAction<boolean>) => {
+      state.isShuffle = action.payload;
+    },
     setAutoPlay: (state, action: PayloadAction<boolean>) => {
       state.autoPlay = action.payload;
     },
@@ -113,6 +118,7 @@ export const {
   setDuration,
   setVolume,
   setLoop,
+  setShuffle,
   setSrcAudio,
   setAutoPlay,
   setPlaylistSong,

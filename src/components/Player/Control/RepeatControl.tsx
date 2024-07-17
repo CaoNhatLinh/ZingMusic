@@ -8,9 +8,7 @@ import colors from "../../../assets/colors";
 import { useAudio } from "../../../utils/AudioContext";
 const RepeatControl: React.FC = () => {
   const isLoop = useAppSelector((state) => state.audio.isLoop);
-  const dispatch = useAppDispatch();
   const {
-    playAudio,
     handleRepeat
   } = useAudio();
   
@@ -19,11 +17,11 @@ const RepeatControl: React.FC = () => {
       <TouchableOpacity onPress={handleRepeat}>
         {isLoop ? (
           <Icon
-           name="repeat" size={28} color={colors.facebook}
+           name="repeat" size={24} color={colors.white}
           />
         ) : (
           <Icon
-           name="repeat" size={28} color={colors.transparentGray}
+           name="repeat" size={24} color={colors.transparentGray}
           />
         )}
       </TouchableOpacity>
