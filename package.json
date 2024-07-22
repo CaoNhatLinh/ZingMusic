@@ -11,13 +11,14 @@
     "dev": "nodemon index.js"
   },
   "dependencies": {
+    "@react-native-community/blur": "^4.4.0",
     "@react-native-community/slider": "^4.5.2",
     "@react-navigation/bottom-tabs": "^6.5.20",
-    "@react-navigation/native": "^6.1.17",
     "@react-navigation/native-stack": "^6.10.0",
     "@react-navigation/stack": "^6.3.29",
     "inversify": "6.0.2",
     "react": "18.2.0",
+    "react-infinite-scroll-component": "^6.1.0",
     "react-native": "0.73.6",
     "react-native-cli": "^2.0.1",
     "react-native-drawer": "^2.5.1",

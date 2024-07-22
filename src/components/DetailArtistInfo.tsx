@@ -1,76 +1,139 @@
-import React from "react"
+import React from "react";
+import { View, Text, Image, StyleSheet, Dimensions, ImageBackground } from "react-native";
+import colors from "../assets/colors";
+import { BlurView } from "@react-native-community/blur";
 
-interface detailArtistInfoProps {
-  name: string
-  thumbnailM: string
-  sortBiography: string
-  realname: string
-  birthday: string
-  totalFollow: number
+interface DetailArtistInfoProps {
+  name: string;
+  thumbnailM: string;
+  sortBiography: string;
+  realname: string;
+  birthday: string;
+  totalFollow: number;
 }
 
-const DetailArtistInfo:React.FC<detailArtistInfoProps> = ({ name, thumbnailM, sortBiography, realname, birthday, totalFollow }) => {
+const DetailArtistInfo: React.FC<DetailArtistInfoProps> = ({
+  name,
+  thumbnailM,
+  sortBiography,
+  realname,
+  birthday,
+  totalFollow,
+}) => {
+  
   return (
-    <>
-      <div className="flex mb-[72px]">
-        {/* Thumbnail */}
-        <div className="relative min-w-[248px] min-h-[248px]">
-          <img
-            className="rounded-full w-full h-full"
-            src={thumbnailM}
-            alt=""
-          />
-          {/* Image Blur */}
-          <div
-            className="absolute top-3 w-full h-full z-[-1] bg-cover rounded-full blur-md scale-95"
-            style={{
-              backgroundImage: `url(${thumbnailM})`
-            }}
-          >
-          </div>
-          {/* End Image Blur */}
-        </div>
-        {/* End Thumbnail */}
+    <View style={styles.container}>
+      {/* Thumbnail */}
+      <View style={styles.thumbnailContainer}>
+      <ImageBackground
+        source={{ uri: thumbnailM }}
+        style={styles.imageBackground}
+      >
+        <BlurView
+          style={styles.absolute}
+          blurType="dark"
+          blurAmount={30}
+        >
+          <Image
+          style={styles.thumbnail}
+          source={{ uri: thumbnailM }}
+          resizeMode="cover"
+        />
+        </BlurView>
+        </ImageBackground>
+      </View>
+      {/* End Thumbnail */}
 
-        <div className="flex flex-col justify-center ml-14">
-          {/* Name */}
-          <div className="text-4xl font-bold text-[color:var(--color-text)]">{name}</div>
-          {/* End Name */}
+      <View style={styles.infoContainer}>
+        {/* Name */}
+        <Text style={styles.name}>{name}</Text>
+        {/* End Name */}
 
-          <div className="text-lg opacity-70 font-medium text-[color:var(--color-text)] mt-6">
-            Real Name: {realname}
-          </div>
+        <Text style={styles.realName}>Real Name: {realname}</Text>
 
-          <div className="flex items-center text-sm opacity-70 font-medium text-[color:var(--color-text)] mt-[2px]">
-            <span className="mr-3">
-              Birthday: {birthday}
-            </span>
-            <span className="flex items-center">
-              Total Follow: {totalFollow}
-            </span>
-          </div>
+        <View style={styles.detailsContainer}>
+          <Text style={styles.birthday}>Birthday: {birthday}</Text>
+          <Text style={styles.totalFollow}>Total Follow: {totalFollow}</Text>
+        </View>
 
-          {/* Description */}
-          <div
-            className="text-sm opacity-70 font-medium text-[color:var(--color-text)] mt-6"
-            style={{
-              maxWidth: "100%",
-              display: "-webkit-box",
-              WebkitBoxOrient: "vertical",
-              WebkitLineClamp: 3,
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-            }}
+        {/* Description */}
+        <Text style={styles.description} numberOfLines={3}>
+          {sortBiography}
+        </Text>
+        {/* End Description */}
+      </View>
+    </View>
+  );
+};
+const win = Dimensions.get("window");
+const styles = StyleSheet.create({
+  container: {
+    flexDirection: "column",
+  },
+  thumbnailContainer: {
+    position: "relative",
+    height: win.height/4,
+  },
+  thumbnail: {
+    height: win.height/4,
+    width: win.height/4,
+    borderRadius: 9999,
+    resizeMode: "cover",
+  },
+  imageBackground: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  absolute: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    bottom: 0,
+    right: 0,
+  },
+ 
+  infoContainer: {
+    flex: 1,
+    justifyContent: "center",
+    marginLeft: 14,
+  },
+  name: {
+    fontSize: 24,
+    fontWeight: "bold",
+    color: colors.white,
+  },
+  realName: {
+    fontSize: 16,
+    opacity: 0.7,
+    fontWeight: "bold",
+    color: colors.white,
+    marginTop: 6,
+  },
+  detailsContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    fontSize: 12,
+    opacity: 0.7,
+    fontWeight: "bold",
+    color: colors.white,
+    marginTop: 2,
+  },
+  birthday: {
+    marginRight: 3,
+  },
+  totalFollow: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  description: {
+    fontSize: 12,
+    opacity: 0.7,
+    fontWeight: "bold",
+    color: colors.white,
+    marginTop: 6,
+    maxWidth: "100%",
+  },
+});
 
-          >
-            {sortBiography}
-          </div>
-          {/* End Description */}
-        </div>
-      </div>
-
-    </>
-  )
-}
-
-export default DetailArtistInfo
+export default DetailArtistInfo;

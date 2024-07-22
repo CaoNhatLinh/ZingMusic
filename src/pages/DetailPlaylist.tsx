@@ -18,7 +18,7 @@ interface playlistType {
   contentLastUpdate: number;
   song: {
     total: string;
-    items: [];
+    items: [any];
   };
 }
 
@@ -42,7 +42,6 @@ const Playlist: React.FC = ({navigation}:any) => {
 
   return (
     <>
-      {/* {console.log(dataDetailPlaylist)} */}
       <View style={{  marginBottom: 24,backgroundColor:colors.black }}>
       <ScrollView>
         {dataDetailPlaylist ? (

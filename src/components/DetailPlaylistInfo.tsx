@@ -3,6 +3,7 @@ import { View, Text, Image, StyleSheet } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import colors from "../assets/colors";
 import Icon from "react-native-vector-icons/FontAwesome5";
+import { useNavigation } from "@react-navigation/native";
 interface DetailPlaylistInfoProps {
   thumbnailM: string;
   title: string;
@@ -22,6 +23,11 @@ const DetailPlaylistInfo: React.FC<DetailPlaylistInfoProps> = ({
   like,
   contentLastUpdate,
 }) => {
+  const navigation = useNavigation<any>();
+  const handleClickArtis = (name: String): void => {
+
+    navigation.navigate("ArtisScreen", { name });
+  };
   const playlistLastUpdate = new Date(contentLastUpdate * 1000).toLocaleDateString("vi-VN");
   return (
     <View style={{ marginBottom: 72 }}>
@@ -39,7 +45,9 @@ const DetailPlaylistInfo: React.FC<DetailPlaylistInfoProps> = ({
           {artists.map((e, i) => (
             <Text key={i}>
               {i > 0 && ", "}
-              <Text style={styles.artistLink}>{e.name}</Text>
+              <Text style={styles.artistLink}
+              onPress={() =>handleClickArtis(e.alias) }
+              >{e.name}</Text>
             </Text>
           ))}
         </Text>

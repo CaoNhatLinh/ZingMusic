@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import { View, Text, Image, TouchableOpacity, ScrollView } from "react-native";
 import { formatTime } from "../utils/formatTime";
 import { useAppDispatch, useAppSelector } from "../hooks/redux"
@@ -16,21 +16,22 @@ interface typeTrackListDetailPlaylist {
   duration: number;
 }
 
-const TrackListDetailPlaylist: React.FC<{ items: [] }> = ({ items }) => {
-  const currnetIndexPlaylist = useAppSelector((state) => state.audio?state.audio.currnetIndexPlaylist:null);
+const TrackListDetailPlaylist: React.FC<{ items: [any] }> = ({ items = [] }) => {
+  const songId = useAppSelector((state) => state.audio ? state.audio.songId : null);
   const dispatch = useAppDispatch()
-  const navigation = useNavigation();
+  const navigation = useNavigation<any>();
   const handleClickPlaySong = (streamingStatus: number, encodeId: string, currentIndex: number): void => {
     if (streamingStatus === 1) {
       dispatch(setCurrnetIndexPlaylist(currentIndex));
       dispatch(changeIconPlay(true));
       dispatch(setAutoPlay(true));
       navigation.navigate('SongSreen' as never, { encodeId });
-    } 
+    }
   };
+
   return (
     <View>
-      
+
       {items.map((e: typeTrackListDetailPlaylist, i: number) => {
         return (
           <TouchableOpacity
@@ -45,7 +46,7 @@ const TrackListDetailPlaylist: React.FC<{ items: [] }> = ({ items }) => {
               borderRadius: 10,
               backgroundColor: e.streamingStatus === 1 ? "transparent" : "#000",
               marginBottom: 10,
-              ...(currnetIndexPlaylist === i && { backgroundColor: colors.facebook, borderRadius: 10}),
+              ...(songId === e.encodeId && { backgroundColor: colors.facebook, borderRadius: 10 }),
             }}
           >
             {/* Thumbnail */}
@@ -53,33 +54,33 @@ const TrackListDetailPlaylist: React.FC<{ items: [] }> = ({ items }) => {
               style={{ width: 46, height: 46, borderRadius: 10, marginRight: 5 }}
               source={{ uri: e.thumbnail }}
               resizeMode="cover"
-              // onPress={() => {
-              //   handleClickPlaySong(e.streamingStatus, e.encodeId, i);
-              // }}
+            // onPress={() => {
+            //   handleClickPlaySong(e.streamingStatus, e.encodeId, i);
+            // }}
             />
-            
+
             {/* End Thumbnail */}
             {/* Title & Artist */}
             <View style={{ flex: 1 }}>
               {/* Title */}
-                <Text
-                  style={{
-                    fontSize: 16,
-                    fontWeight: currnetIndexPlaylist === i ? "bold" : "normal",
-                    color: currnetIndexPlaylist === i ? colors.white : colors.white,
-                  }}
-                  numberOfLines={1}
-                >
-                  {e.title}
-                </Text>
-              
+              <Text
+                style={{
+                  fontSize: 16,
+                  fontWeight: songId === e.encodeId ? "bold" : "normal",
+                  color: songId === e.encodeId ? colors.white : colors.white,
+                }}
+                numberOfLines={1}
+              >
+                {e.title}
+              </Text>
+
               {/* Artist */}
               <Text
                 style={{
                   marginTop: 2,
                   fontSize: 12,
                   opacity: 0.7,
-                  color: currnetIndexPlaylist === i ? colors.white : colors.white,
+                  color: songId === e.encodeId ? colors.white : colors.white,
                 }}
                 numberOfLines={1}
               >
@@ -91,12 +92,7 @@ const TrackListDetailPlaylist: React.FC<{ items: [] }> = ({ items }) => {
                     return (
                       <Text key={iArtist}>
                         {iArtist > 0 ? ", " : ""}
-                        <Text
-                          style={{ textDecorationLine: "underline" }}
-                          onPress={() => {
-                            // Handle artist link press
-                          }}
-                        >
+                        <Text>
                           {eArtist.name}
                         </Text>
                       </Text>
@@ -114,8 +110,8 @@ const TrackListDetailPlaylist: React.FC<{ items: [] }> = ({ items }) => {
             {/* Show Time Duration */}
             <Text
               style={{
-                fontWeight: currnetIndexPlaylist === i ? "bold" : "normal",
-                color: currnetIndexPlaylist === i ? colors.white : colors.white,
+                fontWeight: songId === e.encodeId ? "bold" : "normal",
+                color: songId === e.encodeId ? colors.white : colors.white,
               }}
             >
               {formatTime(e.duration)}
@@ -124,9 +120,9 @@ const TrackListDetailPlaylist: React.FC<{ items: [] }> = ({ items }) => {
           </TouchableOpacity>
         );
       })}
-     
+
     </View>
   );
 };
 
-export default TrackListDetailPlaylist;
+export default memo(TrackListDetailPlaylist);
