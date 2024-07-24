@@ -22,53 +22,53 @@ interface playlistType {
   };
 }
 
-const Playlist: React.FC = ({navigation}:any) => {
- 
+const Playlist: React.FC = () => {
+
   const [dataDetailPlaylist, setDataDetailPlaylist] = useState<playlistType>();
   const route = useRoute();
   const dispatch = useAppDispatch();
   useEffect(() => {
     (async () => {
-      
+
       const playlistId = (route.params as { playlistId?: string })?.playlistId ?? "";
       if (playlistId) {
+
         const detailPlaylist: playlistType = await getDetailPlaylist(playlistId);
         setDataDetailPlaylist(detailPlaylist);
         dispatch(setPlaylistSong(detailPlaylist.song.items));
         dispatch(SetTitlePlayList(detailPlaylist.title));
       }
     })();
-  }, [route.params,dispatch]);
-
+  }, [route.params, dispatch]);
   return (
-    <>
-      <View style={{  marginBottom: 24,backgroundColor:colors.black }}>
-      <ScrollView>
-        {dataDetailPlaylist ? (
-          <>
-            <View style={{ paddingHorizontal: "10%"}}>
-            <DetailPlaylistInfo
-              thumbnailM={dataDetailPlaylist.thumbnailM}
-              title={dataDetailPlaylist.title}
-              artists={dataDetailPlaylist.artists}
-              total={dataDetailPlaylist.song.total}
-              description={dataDetailPlaylist.description}
-              like={dataDetailPlaylist.like}
-              contentLastUpdate={dataDetailPlaylist.contentLastUpdate}
-            />
-            </View>
-            <TrackListDetailPlaylist  
-            items={dataDetailPlaylist.song.items} 
-            
-            />
-          </>
-        ) 
-        : (
-          <ActivityIndicator />
-        )}
+   
+      <View style={{ marginBottom: 24, backgroundColor: colors.black }}>
+        <ScrollView>
+          {dataDetailPlaylist ?
+            <>
+              <View style={{ paddingHorizontal: "10%" }}>
+                <DetailPlaylistInfo
+                  thumbnailM={dataDetailPlaylist.thumbnailM}
+                  title={dataDetailPlaylist.title}
+                  artists={dataDetailPlaylist.artists}
+                  total={dataDetailPlaylist.song.total}
+                  description={dataDetailPlaylist.description}
+                  like={dataDetailPlaylist.like}
+                  contentLastUpdate={dataDetailPlaylist.contentLastUpdate}
+                />
+              </View>
+              <ScrollView horizontal={true} style={{ width: "100%" }}>
+              <TrackListDetailPlaylist
+                items={dataDetailPlaylist.song.items}
+              />
+              </ScrollView>
+            </>
+            :
+            <ActivityIndicator />
+          }
         </ScrollView>
       </View>
-    </>
+    
   );
 };
 

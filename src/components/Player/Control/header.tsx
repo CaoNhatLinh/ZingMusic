@@ -7,9 +7,9 @@ const styles = StyleSheet.create({
   container: {
     justifyContent: "space-between",
     alignItems: "center",
-    backgroundColor: "#000",
-    height: 30 *2,
-    paddingHorizontal: 15,
+    height: "auto",
+    paddingHorizontal: 16,
+    paddingVertical: 4,
   },
   message: {
     color: colors.white,
@@ -27,7 +27,7 @@ interface HeaderProps {
 }
 
 const Header: React.FC<HeaderProps> = ({ title, onDownPress, onQueuePress, onMessagePress }) => (
-  <View style={[styles.container,{flexDirection: "row"}]}>
+  <View style={[styles.container,{flexDirection: "row",backgroundColor: "#ffffff0d"}]}>
     <TouchableOpacity onPress={onDownPress}>
       <Icon name="chevron-down" size={20} color="#FFF" />
     </TouchableOpacity>

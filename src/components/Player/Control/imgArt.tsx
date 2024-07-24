@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from "react";
-import { Animated, Easing, Image, StyleSheet, Text, View } from "react-native";
+import { Animated, Easing, Image, ImageBackground, StyleSheet, Text, View } from "react-native";
 import { Dimensions } from 'react-native';
 import { useAppSelector } from "../../../hooks/redux";
 const ImgArt =  () => {
@@ -54,6 +54,7 @@ const ImgArt =  () => {
   const info = useAppSelector((state) => state.audio.infoSongPlayer);
   return (
     info.thumbnailM ? (
+         
       <View style={{ height: win.height * 50 / 100, flexDirection: "row", alignItems: "center", justifyContent: "center" }}>
         <Animated.Image
           source={{ uri: info.thumbnailM }}

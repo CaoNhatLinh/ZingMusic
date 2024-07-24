@@ -22,9 +22,8 @@ const DetailArtistInfo: React.FC<DetailArtistInfoProps> = ({
 }) => {
   
   return (
-    <View style={styles.container}>
-      {/* Thumbnail */}
-      <View style={styles.thumbnailContainer}>
+
+      <View style={styles.Container}>
       <ImageBackground
         source={{ uri: thumbnailM }}
         style={styles.imageBackground}
@@ -33,18 +32,13 @@ const DetailArtistInfo: React.FC<DetailArtistInfoProps> = ({
           style={styles.absolute}
           blurType="dark"
           blurAmount={30}
-        >
+        ></BlurView>
           <Image
           style={styles.thumbnail}
           source={{ uri: thumbnailM }}
           resizeMode="cover"
         />
-        </BlurView>
-        </ImageBackground>
-      </View>
-      {/* End Thumbnail */}
-
-      <View style={styles.infoContainer}>
+         <View style={styles.infoContainer}>
         {/* Name */}
         <Text style={styles.name}>{name}</Text>
         {/* End Name */}
@@ -53,7 +47,7 @@ const DetailArtistInfo: React.FC<DetailArtistInfoProps> = ({
 
         <View style={styles.detailsContainer}>
           <Text style={styles.birthday}>Birthday: {birthday}</Text>
-          <Text style={styles.totalFollow}>Total Follow: {totalFollow}</Text>
+          <Text style={styles.totalFollow}>Follow: {totalFollow}</Text>
         </View>
 
         {/* Description */}
@@ -62,17 +56,17 @@ const DetailArtistInfo: React.FC<DetailArtistInfoProps> = ({
         </Text>
         {/* End Description */}
       </View>
-    </View>
+        </ImageBackground>
+      </View>
+
   );
 };
 const win = Dimensions.get("window");
 const styles = StyleSheet.create({
-  container: {
-    flexDirection: "column",
-  },
-  thumbnailContainer: {
+  
+  Container: {
     position: "relative",
-    height: win.height/4,
+    height: win.height/2,
   },
   thumbnail: {
     height: win.height/4,
@@ -84,6 +78,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    
   },
   absolute: {
     position: 'absolute',
@@ -94,9 +89,9 @@ const styles = StyleSheet.create({
   },
  
   infoContainer: {
-    flex: 1,
+    height: "auto",
     justifyContent: "center",
-    marginLeft: 14,
+    padding: 14,
   },
   name: {
     fontSize: 24,
@@ -118,13 +113,16 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: colors.white,
     marginTop: 2,
+    justifyContent: "space-between",
   },
   birthday: {
     marginRight: 3,
+    color: colors.white,
   },
   totalFollow: {
     flexDirection: "row",
     alignItems: "center",
+    color: colors.white,
   },
   description: {
     fontSize: 12,

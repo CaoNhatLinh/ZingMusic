@@ -4,6 +4,8 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import colors from "../assets/colors";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import { useNavigation } from "@react-navigation/native";
+import { useAppDispatch, useAppSelector } from "../hooks/redux";
+import { changeIconPlay, setAutoPlay, setCurrnetIndexPlaylist } from "../redux/features/audioSlice";
 interface DetailPlaylistInfoProps {
   thumbnailM: string;
   title: string;
@@ -13,34 +15,64 @@ interface DetailPlaylistInfoProps {
   like: number;
   contentLastUpdate: number;
 }
-
+interface typeTrackListDetailPlaylist {
+  streamingStatus: number;
+  encodeId: string;
+  thumbnail: string;
+  thumbnailM: string;
+  title: string;
+  duration: number;
+}
 const DetailPlaylistInfo: React.FC<DetailPlaylistInfoProps> = ({
   thumbnailM,
-  title,
   artists,
   total,
   description,
   like,
   contentLastUpdate,
 }) => {
+  const dispatch = useAppDispatch();
   const navigation = useNavigation<any>();
   const handleClickArtis = (name: String): void => {
 
     navigation.navigate("ArtisScreen", { name });
   };
+  const PlaylistSong = useAppSelector((state) => state.audio.playlistSong); 
+  const fisrtSong = PlaylistSong?.at(0) as typeTrackListDetailPlaylist | undefined;
+  const handleClickPlaySong = (): void => {
+    if (fisrtSong) {
+      dispatch(setCurrnetIndexPlaylist(0));
+      dispatch(changeIconPlay(true));
+      dispatch(setAutoPlay(true));
+      const songID = fisrtSong.encodeId;
+      navigation.navigate('SongSreen' as never, {encodeId:songID });
+    }
+  };
   const playlistLastUpdate = new Date(contentLastUpdate * 1000).toLocaleDateString("vi-VN");
   return (
-    <View style={{ marginBottom: 72 }}>
+    <View style={{ marginBottom: 24 }}>
       {/* Thumbnail */}
       <View style={styles.thumbnailContainer}>
         <Image style={styles.thumbnail} source={{ uri: thumbnailM }} />
-        <View style={styles.imageBlur} />
       </View>
       <View style={styles.infoContainer}>
-        <Text style={styles.title}>{title}</Text>
+      <Text style={styles.text} numberOfLines={3}>
+          {description}
+        </Text>
+        
 
-        {/* List Artists Playlist */}
-        <Text style={styles.artists}>
+        {/* Total Song */}
+        <View style={{flexDirection:"row",justifyContent:"space-between"}}>
+          <Text style={styles.text}>{total} Bài hát</Text>
+          <View style={styles.likeContainer}>
+            <Icon name="heart" size={16} color={colors.white} style={{paddingHorizontal:10}} />
+            <Text style={styles.text}>{like}</Text>
+          </View>
+        </View>
+        <Text style={styles.text}>Cập nhật mới nhất {playlistLastUpdate}</Text>
+        
+      {/* List Artists Playlist */}
+      <Text style={styles.artists}>
           Playlist by{" "}
           {artists.map((e, i) => (
             <Text key={i}>
@@ -52,24 +84,9 @@ const DetailPlaylistInfo: React.FC<DetailPlaylistInfoProps> = ({
           ))}
         </Text>
         {/* End List Artists Playlist */}
-
-        {/* Total Song */}
-        <View style={styles.totalSong}>
-          <Text style={styles.updatedAt}>Updated at {playlistLastUpdate}</Text>
-          <Text>{total} Songs</Text>
-          <View style={styles.likeContainer}>
-            <Icon name="heart" size={16} color={colors.white} />
-            <Text style={{color: colors.white}}>{like}</Text>
-          </View>
-        </View>
-     
-        <Text style={styles.description} numberOfLines={3}>
-          {description}
-        </Text>
-      
         <View style={styles.buttonContainer}>
           {/* Play */}
-          <TouchableOpacity style={styles.button}>
+          <TouchableOpacity style={styles.button} onPress={handleClickPlaySong}>
             <Icon name='play' size={16} color={colors.white} />
             <Text style={styles.buttonText}>PLAY</Text>
           </TouchableOpacity>
@@ -101,8 +118,7 @@ const styles = StyleSheet.create({
     transform: [{ scale: 0.95 }],
   },
   infoContainer: {
-    flex: 1,
-    marginLeft: 14,
+    paddingVertical: 16,
   },
   title: {
     fontSize: 24,
@@ -120,17 +136,11 @@ const styles = StyleSheet.create({
     opacity: 1,
     fontWeight: "bold",
   },
-  totalSong: {
-    flexDirection: "row",
-    alignItems: "center",
-    fontSize: 12,
-    opacity: 0.7,
-    color: colors.white,
-    marginTop: 2,
-  },
-  updatedAt: {
+  
+  text: {
     marginRight: 3,
     color: colors.white,
+    fontSize:16,
   },
   likeContainer: {
     flexDirection: "row",
@@ -139,7 +149,6 @@ const styles = StyleSheet.create({
   },
   description: {
     fontSize: 12,
-    opacity: 0.7,
     color: colors.white,
     marginTop: 6,
     maxWidth: "100%",
@@ -152,12 +161,13 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    borderRadius: 10,
+    borderRadius: 20,
+    marginTop: 16,
     paddingVertical: 8,
     paddingHorizontal: 16,
     minWidth: 100,
-    height: 40,
-    backgroundColor: colors.dark,
+    height: 42,
+    backgroundColor: colors.facebook,
   },
   buttonText: {
     marginLeft: 8,

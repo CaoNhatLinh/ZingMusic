@@ -9,18 +9,8 @@ import ImgArtfrom from "./imgArt"
 import ImgArt from "./imgArt";
 const TrackInfo: React.FC = () => {
   const info = useAppSelector((state) => state.audio.infoSongPlayer);
-  const navigation = useNavigation();
   const win = Dimensions.get('window');
-  const layout = win.height * 40 / 100;
-  const ratio = win.width;
-  const sizeImg = 70 * ratio / 100;
-  const styles = StyleSheet.create({
-    imgArt: {
-      height: sizeImg,
-      width: sizeImg,
-      borderRadius: 9999999
-    }
-  });
+  const navigation = useNavigation<any>();
   return (
     <>
       <View style={{ flexDirection: "column", alignItems: "center" }}>
@@ -45,7 +35,7 @@ const TrackInfo: React.FC = () => {
                 <React.Fragment key={i}>
                   <Text
                     style={{ color: colors.white, fontSize: 12, opacity: 0.6, textDecorationLine: "underline" }}
-                  // onPress={() => navigation.navigate("Artist", { alias: e.alias })}
+                  onPress={() => navigation.navigate("ArtisScreen", { name: e.alias })}
                   >
                     {e.name}
                   </Text>

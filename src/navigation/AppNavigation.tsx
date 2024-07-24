@@ -21,7 +21,7 @@ const MyTheme = {
     ...DefaultTheme,
     colors: {
         ...DefaultTheme.colors,
-        background: colors.black,
+        background:colors.black,
         text: colors.white,
     },
 };
@@ -51,6 +51,7 @@ export const AppNavigation = () => {
 
                         title: route.params?.name,
                         headerShown: false,
+                       
                         gestureDirection: 'vertical',
                         transitionSpec: {
                             open: {

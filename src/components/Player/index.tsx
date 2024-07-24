@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useMemo, memo, useCallback } from "react"
-import { ActivityIndicator, Text, View } from "react-native"
+import { ActivityIndicator, Dimensions, ImageBackground, Text, View } from "react-native"
+import { useNavigation } from "@react-navigation/native";
 import Controls from "./Control"
 import Sound from "react-native-sound"
 import { getSong, getInfoSong } from "../../api/song"
@@ -9,10 +10,11 @@ import {
   setSrcAudio,
 } from "../../redux/features/audioSlice"
 import { setSongId, setCurrnetIndexPlaylist } from "../../redux/features/audioSlice"
-import Lyric from "./Lyric"
-import colors from "../../assets/colors"
 import { useRoute } from "@react-navigation/native"
 import { useAudio } from "../../utils/AudioContext"
+import TrackInfo from "./Control/TrackInfo"
+import Header from "./Control/header"
+import { BlurView } from "@react-native-community/blur";
 
 //
 interface songType {
@@ -29,7 +31,6 @@ const Player: React.FC = () => {
 
   const {
     status,
-    playAudio,
     initializeAudio,
   } = useAudio();
   const route = useRoute()
@@ -41,12 +42,10 @@ const Player: React.FC = () => {
   const currentSongId = useAppSelector((state) => state.audio.songId)
   function isUpdate() {
     if (RoutesongId != currentSongId) {
-      
       return true
     }
     return false
   }
-
   useEffect(() => {
     (
       async () => {
@@ -72,7 +71,6 @@ const Player: React.FC = () => {
                   artists: infoSong.artists,
                 }
               ))
-             
               initializeAudio(linkSong[128])
               dispath(setSongId(songID))
             }
@@ -85,80 +83,49 @@ const Player: React.FC = () => {
   }, [dispath, currentSongId])
 
 
-  // useEffect(() => {
-  //   if (status === "success") {
-  //     playAudio()
-  //   }
-  // }, [status])
-
+  const win = Dimensions.get('window');
+  const navigation = useNavigation();
+  const info = useAppSelector((state) => state.audio.infoSongPlayer);
+  const titlePlayList = useAppSelector((state) => state.audio.titlePlayList);
   return (
-    <View>
-      {
-        status == 'play' || status == 'pause'
-          ?
-          <View>
-            <Controls />
-          </View>
-          :
-          <ActivityIndicator />
-      }
+    info ?
+      <View>
+        {
+          status == 'play' || status == 'pause'
+            ?
+            <View style={{ position: "relative" }}>
+              <ImageBackground
+                source={{ uri: info.thumbnailM }}
+                style={{ width: win.width, height: win.height }}
+              >
+                <BlurView
+                  style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    bottom: 0,
+                    right: 0,
+                  }}
+                  blurType="dark"
+                  blurAmount={30}
+                ></BlurView>
+                <Header title={titlePlayList} onDownPress={function (): void {
+                  navigation.goBack()
+                }} onQueuePress={function (): void {
+                  console.log("message")
+                }} onMessagePress={function (): void {
+                  console.log("message")
+                }} />
+                <TrackInfo />
+                <Controls />
 
-      {/* <Audio
-        ref={audioRef}
-        source={{uri: srcAudio}}
-        style={{display: 'none'}}
-        loop={isLoop}
-        autoPlay={true}
-        hidden
-        onTimeUpdate = {() => {
-            if(audioRef.current) {
-              dispath(setCurrentTime(
-                (audioRef.current.currentTime)
-              ))
-            }
-          }
+              </ImageBackground>
+            </View>
+            :
+            <ActivityIndicator />
         }
-        
-        onLoadedData = {() => {
-            if(audioRef.current) {
-              dispath(setDuration(
-                (audioRef.current.duration)
-              ))
-            }
-        }}
-        onEnded = {() => {
-          if (!isLoop) {
-            dispath(setCurrentTime(0))
-            dispath(changeIconPlay(false))
-
-            if(playlistSong !== undefined && playlistSong.length > 0) {
-
-              let currentIndex
-
-              if(currnetIndexPlaylist === playlistSong.length - 1) {
-                currentIndex = 0
-              } else {
-                currentIndex = currnetIndexPlaylist + 1
-              }
-
-              dispatch(setCurrnetIndexPlaylist(
-                currentIndex
-              ))
-
-              dispatch(setSongId(
-                playlistSong[currentIndex].encodeId
-              ))
-
-              dispatch(changeIconPlay(true))
-            }
-
-          }
-        }}
-      /> */}
-      {/* 
-      <Lyric auRef={audioRef.current}/> */}
-
-    </View>
+      </View>
+      : null
   )
 }
 

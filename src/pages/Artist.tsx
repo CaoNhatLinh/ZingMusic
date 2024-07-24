@@ -6,7 +6,7 @@ import Loading from "../components/Loading";
 import { useAppDispatch } from "../hooks/redux";
 import { setPlaylistSong } from "../redux/features/audioSlice";
 import { useRoute } from "@react-navigation/native";
-import { Text, View, FlatList, StyleSheet } from "react-native";
+import { Text, View, FlatList, StyleSheet, Dimensions } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 
 interface artistType {
@@ -18,7 +18,7 @@ interface artistType {
   birthday: string;
   totalFollow: number;
 }
-
+const win = Dimensions.get("window").width;
 const Artist: React.FC = () => {
   const route = useRoute();
   const params = route.params as { name: string };
@@ -67,9 +67,9 @@ const Artist: React.FC = () => {
     
   
     <View style={styles.container}>
+      <ScrollView>
       {dataDetailArtist ? (
         <>
-        <ScrollView>
           <DetailArtistInfo
             name={dataDetailArtist.name}
             thumbnailM={dataDetailArtist.thumbnailM}
@@ -78,6 +78,7 @@ const Artist: React.FC = () => {
             birthday={dataDetailArtist.birthday}
             totalFollow={dataDetailArtist.totalFollow}
           />
+            <ScrollView horizontal={true} >
           <FlatList
             data={dataListArtistSong.items}
             keyExtractor={(item, index) => index.toString()}
@@ -86,12 +87,14 @@ const Artist: React.FC = () => {
             onEndReachedThreshold={0.5}
             ListFooterComponent={loading ? <Loading /> : null}
           />
-          </ScrollView>
+          </ScrollView >
         </>
       ) : (
         <Loading />
       )}
+      </ScrollView>
     </View>
+
   );
 };
 
