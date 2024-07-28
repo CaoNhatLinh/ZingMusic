@@ -14,6 +14,7 @@
     "@react-native-community/blur": "^4.4.0",
     "@react-native-community/slider": "^4.5.2",
     "@react-navigation/bottom-tabs": "^6.5.20",
+    "@react-navigation/native": "^6.1.18",
     "@react-navigation/native-stack": "^6.10.0",
     "@react-navigation/stack": "^6.3.29",
     "inversify": "6.0.2",

@@ -14,6 +14,7 @@ import { TestScreen } from "../pages/pagtest";
 import colors from "../assets/colors";
 import SongSreen from "../pages/PlaySong";
 import Artist from "../pages/Artist";
+import AudioPlayerBox from "../pages/AudioBox";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -90,6 +91,7 @@ export const AppNavigation = () => {
                     component={Artist}
                     options={({ route }: { route: { params?: { name?: string } } }) => ({ title: route.params?.name, headerShown: true, ...TransitionPresets.SlideFromRightIOS, })} />
             </Stack.Navigator>
+            <AudioPlayerBox />
         </NavigationContainer>
     );
 }
