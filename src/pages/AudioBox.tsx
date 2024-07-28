@@ -66,18 +66,3 @@ const styles = StyleSheet.create({
 });
 
 export default AudioPlayerBox;
-
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
-
-export default function AudioBox() {
-  return (
-    <View>
-      <Text>AudioBox</Text>
-    </View>
-  )
-}
-
-const styles = StyleSheet.create({})
-
-r
