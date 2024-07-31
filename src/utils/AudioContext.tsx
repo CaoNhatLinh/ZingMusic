@@ -109,10 +109,10 @@ const isShuffle = useAppSelector((state) => state.audio.isShuffle);
     intervalRef.current = setInterval(() => {
       if (audioRef.current) {
         audioRef.current.getCurrentTime((seconds) => {
-          dispatch(setCurrentTime(seconds));
+            return dispatch(setCurrentTime(parseFloat(seconds.toFixed(3))));
         });
       }
-    }, 1000);
+    }, 250);
     setStatus('play');
   };
 

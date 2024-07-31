@@ -44,7 +44,7 @@ export const AppNavigation = () => {
                 <Stack.Screen name="inapp" component={InappNavigation} options={{ headerShown: false }} />
                 <Stack.Screen name="DetailPlaylist"
                     component={DetailPlaylist}
-                    options={({ route }: { route: { params?: { name?: string } } }) => ({ title: route.params?.name, headerShown: true, ...TransitionPresets.SlideFromRightIOS, })} />
+                    options={({ route }: { route: { params?: { name?: string } } }) => ({ title: route.params?.name, headerShown: true})} />
                 <Stack.Screen name="SongSreen"
                     component={SongSreen}
                     options={({ route }: { route: { params?: { name?: string } } }) =>
@@ -91,7 +91,7 @@ export const AppNavigation = () => {
                     component={Artist}
                     options={({ route }: { route: { params?: { name?: string } } }) => ({ title: route.params?.name, headerShown: true, ...TransitionPresets.SlideFromRightIOS, })} />
             </Stack.Navigator>
-            <AudioPlayerBox />
+            {/* <AudioPlayerBox /> */}
         </NavigationContainer>
     );
 }

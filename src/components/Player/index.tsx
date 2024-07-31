@@ -13,7 +13,7 @@ import { setSongId, setCurrnetIndexPlaylist } from "../../redux/features/audioSl
 import { useRoute } from "@react-navigation/native"
 import { useAudio } from "../../utils/AudioContext"
 import TrackInfo from "./Control/TrackInfo"
-import Header from "./Control/header"
+
 import { BlurView } from "@react-native-community/blur";
 
 //
@@ -84,48 +84,20 @@ const Player: React.FC = () => {
 
 
   const win = Dimensions.get('window');
-  const navigation = useNavigation();
-  const info = useAppSelector((state) => state.audio.infoSongPlayer);
-  const titlePlayList = useAppSelector((state) => state.audio.titlePlayList);
+ 
   return (
-    info ?
       <View>
         {
           status == 'play' || status == 'pause'
             ?
-            <View style={{ position: "relative" }}>
-              <ImageBackground
-                source={{ uri: info.thumbnailM }}
-                style={{ width: win.width, height: win.height }}
-              >
-                <BlurView
-                  style={{
-                    position: 'absolute',
-                    top: 0,
-                    left: 0,
-                    bottom: 0,
-                    right: 0,
-                  }}
-                  blurType="dark"
-                  blurAmount={30}
-                ></BlurView>
-                <Header title={titlePlayList} onDownPress={function (): void {
-                  navigation.goBack()
-                }} onQueuePress={function (): void {
-                  console.log("message")
-                }} onMessagePress={function (): void {
-                  console.log("message")
-                }} />
+            <View>
                 <TrackInfo />
                 <Controls />
-
-              </ImageBackground>
             </View>
             :
             <ActivityIndicator />
         }
       </View>
-      : null
   )
 }
 
