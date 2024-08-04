@@ -28,9 +28,10 @@ This is a [**React Native**](https://reactnative.dev) project
   <img src="https://github.com/user-attachments/assets/47c7bbbf-c71b-4f51-a311-c3bf136c8af8" width="200" /> &nbsp;
   <img src="https://github.com/user-attachments/assets/e9e439d5-b296-4106-b2fc-d81e5321b0f8" width="200" /> &nbsp;
 </p>
-# Getting Started
 
->**Note**: Make sure you have completed the [React Native - Environment Setup](https://reactnative.dev/docs/environment-setup) instructions till "Creating a new application" step, before proceeding.
+## Getting Started
+
+> **Note**: Make sure you have completed the [React Native - Environment Setup](https://reactnative.dev/docs/environment-setup) instructions till "Creating a new application" step, before proceeding.
 
 
 ## Step 1: install package
