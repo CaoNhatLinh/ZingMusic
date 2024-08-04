@@ -42,7 +42,7 @@ const Playlist: React.FC = () => {
   }, [route.params, dispatch]);
   return (
    
-      <View style={{ marginBottom: 24, backgroundColor: colors.black }}>
+      <View style={{ marginBottom: 24, backgroundColor: colors.dark }}>
         <ScrollView>
           {dataDetailPlaylist ?
             <>

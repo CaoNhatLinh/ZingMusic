@@ -9,12 +9,11 @@ import {
   setInfoSongPlayer,
   setSrcAudio,
 } from "../../redux/features/audioSlice"
-import { setSongId, setCurrnetIndexPlaylist } from "../../redux/features/audioSlice"
+import { setSongId } from "../../redux/features/audioSlice"
 import { useRoute } from "@react-navigation/native"
 import { useAudio } from "../../utils/AudioContext"
 import TrackInfo from "./Control/TrackInfo"
 
-import { BlurView } from "@react-native-community/blur";
 
 //
 interface songType {
@@ -47,57 +46,43 @@ const Player: React.FC = () => {
     return false
   }
   useEffect(() => {
-    (
-      async () => {
-        try {
-          if (RoutesongId === "") {
-            console.log("song id not found")
+
+    
+    try {
+      if (RoutesongId === "") {
+        console.log("song id not found")
+      }
+      else {
+        if (isUpdate()) {
+          if (audioRef.current) {
+            audioRef.current.stop()
           }
-          else {
-            if (isUpdate()) {
-              if (audioRef.current) {
-                audioRef.current.stop()
-              }
-              const songID = playlistSong[currnetIndexPlaylist].encodeId
-              const linkSong: songType = await getSong(songID)
-              linkSong[128] ? dispath(setSrcAudio(linkSong[128])) : dispath(setSrcAudio(""))
-              const infoSong: songType = await getInfoSong(songID)
-              dispath(setInfoSongPlayer(
-                {
-                  title: infoSong.title,
-                  thumbnail: infoSong.thumbnail,
-                  thumbnailM: infoSong.thumbnailM,
-                  artistsNames: infoSong.artistsNames,
-                  artists: infoSong.artists,
-                }
-              ))
-              initializeAudio(linkSong[128])
-              dispath(setSongId(songID))
-            }
-          }
-        } catch (err) {
-          console.log(err)
+          const songID = playlistSong[currnetIndexPlaylist].encodeId
+          initializeAudio(songID)
         }
       }
-    )()
+    } catch (err) {
+      console.log(err)
+    }
+
   }, [dispath, currentSongId])
 
 
   const win = Dimensions.get('window');
- 
+
   return (
-      <View>
-        {
-          status == 'play' || status == 'pause'
-            ?
-            <View>
-                <TrackInfo />
-                <Controls />
-            </View>
-            :
-            <ActivityIndicator />
-        }
-      </View>
+    <View>
+      {
+        status == 'play' || status == 'pause'
+          ?
+          <View>
+            <TrackInfo />
+            <Controls />
+          </View>
+          :
+          <ActivityIndicator />
+      }
+    </View>
   )
 }
 

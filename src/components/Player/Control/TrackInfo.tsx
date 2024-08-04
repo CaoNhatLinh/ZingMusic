@@ -5,7 +5,6 @@ import { useAppSelector } from "../../../hooks/redux";
 import colors from "../../../assets/colors";
 import { Dimensions } from 'react-native';
 import Icon from "react-native-vector-icons/FontAwesome";
-import ImgArtfrom from "./imgArt"
 import ImgArt from "./imgArt";
 const TrackInfo: React.FC = () => {
   const info = useAppSelector((state) => state.audio.infoSongPlayer);

@@ -1,7 +1,6 @@
 import React from "react";
 import { TouchableOpacity, StyleSheet } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome6";
-import { useAudio } from "../../../utils/AudioContext";
 import colors from "../../../assets/colors";
 import { useAppDispatch, useAppSelector } from "../../../hooks/redux";
 import { setShuffle } from "../../../redux/features/audioSlice";

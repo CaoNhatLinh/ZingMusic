@@ -1,8 +1,8 @@
 import React, { createContext, useContext, useRef, useState, ReactNode, FC, useCallback } from 'react';
 import Sound from 'react-native-sound';
 import { useAppDispatch, useAppSelector } from '../hooks/redux';
-import { changeIconPlay, setCurrentTime, setCurrnetIndexPlaylist, setDuration, setLoop, setSongId } from '../redux/features/audioSlice';
-
+import { changeIconPlay, setCurrentTime, setCurrnetIndexPlaylist, setDuration, setInfoSongPlayer, setLoop, setSongId, setSrcAudio } from '../redux/features/audioSlice';
+import { getSong, getInfoSong } from "../api/song"
 interface AudioContextType {
   audioRef: React.MutableRefObject<Sound | null>;
   intervalRef: React.MutableRefObject<NodeJS.Timeout | null>;
@@ -12,7 +12,7 @@ interface AudioContextType {
   playAudio: () => void;
   pauseAudio: () => void;
   stopAudio: () => void;
-  handleRepeat:()=>void;
+  handleRepeat: () => void;
   nextSong: (playlistSong: any, currnetIndexPlaylist: number) => void;
   previousSong: (playlistSong: any, currnetIndexPlaylist: number) => void;
 }
@@ -30,41 +30,66 @@ export const useAudio = (): AudioContextType => {
 interface AudioProviderProps {
   children: ReactNode;
 }
-const getRandomIndex = (max:number) => {
+interface songType {
+  [key: number]: string
+  title: string
+  infoSong: string
+  thumbnail: string
+  thumbnailM: string
+  artistsNames: string
+  artists: []
+}
+const getRandomIndex = (max: number) => {
   return Math.floor(Math.random() * max);
 };
 export const AudioProvider: FC<AudioProviderProps> = ({ children }) => {
   const dispatch = useAppDispatch();
-const [status, setStatus] = useState<AudioStatusType>('loading');
-const [errorMessage, setErrorMessage] = useState('');
-const audioRef = useRef<Sound | null>(null);
-const intervalRef = useRef<NodeJS.Timeout | null>(null);
-const playlistSong = useAppSelector((state) => state.audio.playlistSong);
-const currnetIndexPlaylist = useAppSelector((state) => state.audio.currnetIndexPlaylist);
-const isLoop = useAppSelector((state) => state.audio.isLoop);
-const isShuffle = useAppSelector((state) => state.audio.isShuffle);  
-  const initializeAudio = (url: string) => {
+  const [status, setStatus] = useState<AudioStatusType>('loading');
+  const [errorMessage, setErrorMessage] = useState('');
+  const audioRef = useRef<Sound | null>(null);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const playlistSong = useAppSelector((state) => state.audio.playlistSong);
+  const currnetIndexPlaylist = useAppSelector((state) => state.audio.currnetIndexPlaylist);
+  const isLoop = useAppSelector((state) => state.audio.isLoop);
+  const isShuffle = useAppSelector((state) => state.audio.isShuffle);
+  const initializeAudio = (songID: string) => {
     if (audioRef.current) {
       stopAudio();
     }
-    const sound = new Sound(url, Sound.MAIN_BUNDLE, (error) => {
-      if (error) {
-        setErrorMessage(error.message);
-        setStatus('error');
-      } else {
-        setErrorMessage('');
-        dispatch(setCurrentTime(0));
-        dispatch(setDuration(sound.getDuration()));
-        sound.setVolume(1);
-        audioRef.current = sound;
-        setStatus('success');
-        playAudio()
-      }
-    });
-  };
- 
+    (async () => {
+      const [url, infoSong] = await Promise.all([getSong(songID), getInfoSong(songID)]);
+      url[128] ? dispatch(setSrcAudio(url[128])) : dispatch(setSrcAudio(""))
+      dispatch(setInfoSongPlayer(
+        {
+          title: infoSong.title,
+          thumbnail: infoSong.thumbnail,
+          thumbnailM: infoSong.thumbnailM,
+          artistsNames: infoSong.artistsNames,
+          artists: infoSong.artists,
+        }
+      ))
 
-  
+      dispatch(setSongId(songID))
+      const sound = new Sound(url[128], Sound.MAIN_BUNDLE, (error) => {
+        if (error) {
+          setErrorMessage(error.message);
+          setStatus('error');
+        } else {
+
+          setErrorMessage('');
+          dispatch(setCurrentTime(0));
+          dispatch(setDuration(sound.getDuration()));
+          sound.setVolume(1);
+          audioRef.current = sound;
+          setStatus('success');
+          playAudio()
+        }
+      });
+    })();
+  };
+
+
+
   const nextSong = (playlistSong: any, currnetIndexPlaylist: number) => {
     if (playlistSong !== undefined && playlistSong.length > 0) {
       let currentIndex;
@@ -74,11 +99,10 @@ const isShuffle = useAppSelector((state) => state.audio.isShuffle);
         if (isShuffle) {
           currentIndex = getRandomIndex(playlistSong.length);
         } else {
-        currentIndex = (currnetIndexPlaylist + 1) % playlistSong.length;
+          currentIndex = (currnetIndexPlaylist + 1) % playlistSong.length;
         }
         dispatch(setCurrnetIndexPlaylist(currentIndex));
-        dispatch(setSongId(playlistSong[currentIndex].encodeId));
-        dispatch(changeIconPlay(true));
+        initializeAudio(playlistSong[currentIndex].encodeId);
       }
     }
   };
@@ -88,19 +112,18 @@ const isShuffle = useAppSelector((state) => state.audio.isShuffle);
       if (currnetIndexPlaylist === playlistSong.length - 1) {
         currentIndex = 0;
       } else {
-        console.log(currnetIndexPlaylist);
         currentIndex = (currnetIndexPlaylist - 1) % playlistSong.length;
         dispatch(setCurrnetIndexPlaylist(currentIndex));
         dispatch(setSongId(playlistSong[currentIndex].encodeId));
-        dispatch(changeIconPlay(true));
-       
+
+
       }
     }
   };
   const playAudio = () => {
+    dispatch(changeIconPlay(true));
     audioRef.current?.play((success) => {
       if (success) {
-
         nextSong(playlistSong, currnetIndexPlaylist);
       } else {
         console.log('playback failed due to audio decoding errors');
@@ -109,10 +132,10 @@ const isShuffle = useAppSelector((state) => state.audio.isShuffle);
     intervalRef.current = setInterval(() => {
       if (audioRef.current) {
         audioRef.current.getCurrentTime((seconds) => {
-            return dispatch(setCurrentTime(parseFloat(seconds.toFixed(3))));
+          return dispatch(setCurrentTime(parseFloat(seconds.toFixed(3))));
         });
       }
-    }, 250);
+    }, 1000);
     setStatus('play');
   };
 
@@ -132,11 +155,11 @@ const isShuffle = useAppSelector((state) => state.audio.isShuffle);
     }
     setStatus('stop');
   };
-  
+
   const handleRepeat = () => {
     dispatch(setLoop(!isLoop));
     audioRef.current?.setNumberOfLoops(!isLoop ? -1 : 0);
-};
+  };
 
 
   return (

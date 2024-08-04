@@ -1,19 +1,13 @@
 import { Dimensions, Text, View } from "react-native";
 import Slider from '@react-native-community/slider';
-import { useEffect, useRef, useState } from "react";
-import { useSelector } from "react-redux";
-import Sound from "react-native-sound";
 import colors from "../../../assets/colors";
-import { useAppDispatch, useAppSelector } from "../../../hooks/redux";
-import { setCurrentTime, setDuration } from "../../../redux/features/audioSlice";
+import {  useAppSelector } from "../../../hooks/redux";
 import { useAudio } from "../../../utils/AudioContext"
 const win = Dimensions.get('window');
-const width = win.width;
 
 const SongSliderControl: React.FC = () => {
     const {
         audioRef,
-        status,
       } = useAudio();
     const currentTime = useAppSelector((state: any) => state.audio.currentTime);
     const duration = useAppSelector((state: any) => state.audio.duration);

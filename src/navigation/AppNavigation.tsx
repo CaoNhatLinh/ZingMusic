@@ -5,16 +5,17 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import Home from "../pages/Home";
 // import Top100 from "../pages/Top100";
 import DetailPlaylist from "../pages/DetailPlaylist";
-// import ChartHome from "../pages/ChartHome";
+
 // // import Artist from "../pages/Artist";
 // import Search from "../pages/Search";
 // import MV from "../pages/MV";
 // import DetailMV from "../pages/DetailMV";
-import { TestScreen } from "../pages/pagtest";
 import colors from "../assets/colors";
 import SongSreen from "../pages/PlaySong";
 import Artist from "../pages/Artist";
-import AudioPlayerBox from "../pages/AudioBox";
+import AudioPlayerBox from "../components/AudioBox";
+import ChartHome from "../pages/ChartHome";
+import Search from "../pages/Search";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -22,7 +23,7 @@ const MyTheme = {
     ...DefaultTheme,
     colors: {
         ...DefaultTheme.colors,
-        background:colors.black,
+        background:colors.dark,
         text: colors.white,
     },
 };
@@ -90,8 +91,11 @@ export const AppNavigation = () => {
 <Stack.Screen name="ArtisScreen"
                     component={Artist}
                     options={({ route }: { route: { params?: { name?: string } } }) => ({ title: route.params?.name, headerShown: true, ...TransitionPresets.SlideFromRightIOS, })} />
-            </Stack.Navigator>
-            {/* <AudioPlayerBox /> */}
+                    <Stack.Screen name="Search" component={Search} options={{ title: 'Search', headerShown: false }} />
+                    
+            </Stack.Navigator>  
+            <AudioPlayerBox /> 
+            
         </NavigationContainer>
     );
 }
@@ -102,25 +106,34 @@ const InappNavigation = () => {
     return (
         <Tab.Navigator
             screenOptions={({ route }) => ({
-                tabBarIcon: ({ focused, color, size }) => {
+                tabBarIcon: ({ color}) => {
                     let iconName = '';
                     if (route.name === 'Home') {
                         iconName = 'home';
                     }
-                    return <Icon name={iconName} size={size} color={color} />;
+                    if (route.name === 'Chart') {
+                        iconName = 'line-chart';
+                    }
+                    return <Icon name={iconName} size={28} color={color} />;
                 },
                 headerStyle: {
                     backgroundColor: colors.black,
                 },
                 headerTitleStyle: {
-                    color: 'white'
+                    color: 'white',
                 },
-                tabBarActiveTintColor: 'tomato',
-                tabBarInactiveTintColor: 'gray',
+                tabBarStyle: {
+                    backgroundColor: "#0F0F0F",
+                },
+                tabBarActiveTintColor: colors.googlePlus,
+                tabBarInactiveTintColor: colors.gray,
+                tabBarLabelStyle: {
+                    display: 'none',
+                },
             })}
         >
-            <Tab.Screen name="Home" component={Home} />
+            <Tab.Screen name="Home" component={Home} options={{ title: 'Home', headerShown: false }} />
+            <Tab.Screen name="Chart" component={ChartHome} options={{ title: 'BXH', headerShown: false }} />
         </Tab.Navigator>
     );
-}
-
+  };

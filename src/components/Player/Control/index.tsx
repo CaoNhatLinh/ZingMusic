@@ -1,5 +1,4 @@
 import React, { useState } from "react"
-import LyricControl from "./LyricControl"
 import PlayControl from "./PlayControl"
 import RepeatControl from "./RepeatControl"
 import ShuffleControl from "./ShuffleControl"

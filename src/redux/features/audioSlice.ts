@@ -22,6 +22,7 @@ interface AudioState {
   playlistSong: Array<object>;
   isLyric: boolean;
   titlePlayList: string;
+  isShowAudioBox: boolean;
 }
 
 const initialState: AudioState = {
@@ -46,6 +47,7 @@ const initialState: AudioState = {
   playlistSong: [],
   isLyric: false,
   titlePlayList: "",
+  isShowAudioBox: true,
 };
 
 const audioSlice = createSlice({
@@ -105,7 +107,9 @@ const audioSlice = createSlice({
     SetTitlePlayList: (state, action: PayloadAction<string>) => {
       state.titlePlayList = action.payload;
     },
-    
+    setShowAudioBox: (state, action: PayloadAction<boolean>) => {
+      state.isShowAudioBox = action.payload;
+    },
   },
 });
 
@@ -125,5 +129,6 @@ export const {
   setCurrnetIndexPlaylist,
   setOpenLyric,
   SetTitlePlayList,
+  setShowAudioBox,
 } = audioSlice.actions;
 export default audioSlice.reducer;

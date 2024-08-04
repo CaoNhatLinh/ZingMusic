@@ -1,8 +1,6 @@
 import React from "react";
 import { View, TouchableOpacity } from "react-native";
-import IconRepeat from "../../Icons/Repeat";
-import { useAppDispatch, useAppSelector } from "../../../hooks/redux";
-import { setLoop } from "../../../redux/features/audioSlice";
+import { useAppSelector } from "../../../hooks/redux";
 import Icon from "react-native-vector-icons/FontAwesome6";
 import colors from "../../../assets/colors";
 import { useAudio } from "../../../utils/AudioContext";

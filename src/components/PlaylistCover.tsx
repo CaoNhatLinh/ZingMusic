@@ -11,11 +11,14 @@ interface coverProps {
 
 const styles = StyleSheet.create({
   roundedContainer: {
-    borderRadius: 10,
+    borderRadius: 16,
+    backgroundColor: colors.white,
+    width:120,
+    overflow: "hidden",
   },
   thumbnail: {
-    width: 100,
-    height: 100,
+    width: 120,
+    height: 120,
   },
   imageBlur: {
     position: 'absolute',
@@ -28,14 +31,14 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     marginTop: 8,
+    width: 100,
   },
   title: {
     fontSize: 12,
     fontWeight: 'bold',
     color: colors.white,
   },
-  sortDescription: {
-  },
+ 
 });
 const Cover: React.FC<coverProps> = ({ title, sortDescription, thumbnail ,handleClickPlaylist}) => {
   return (
@@ -45,14 +48,10 @@ const Cover: React.FC<coverProps> = ({ title, sortDescription, thumbnail ,handle
           <Image style={styles.thumbnail} source={{ uri: thumbnail }} alt={title} />
       </View>
       <View style={styles.contentContainer}>
-          <Text style={styles.title} numberOfLines={1}>
+          <Text style={styles.title} numberOfLines={2}>
             {title}
           </Text>
-        {sortDescription && (
-          <Text style={styles.sortDescription} numberOfLines={2}>
-            {sortDescription}
-          </Text>
-        )}
+       
       </View>
       </TouchableOpacity>
     </View>

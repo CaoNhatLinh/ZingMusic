@@ -1,58 +1,65 @@
-import React, { useState } from "react"
-import IconSearch from "../../Icons/Search"
-import { useNavigate } from "react-router-dom"
+import React, { useState } from "react";
+import { View, TextInput, TouchableOpacity } from "react-native";
+import Icon from "react-native-vector-icons/FontAwesome";
+import { useNavigation } from "@react-navigation/native";
+import colors from "../../../assets/colors";
 
 const SearchBox: React.FC = () => {
+  const navigation = useNavigation<any>();
 
-  const navigate = useNavigate()
+  const [isActive, setActive] = useState<boolean>(false);
+  const [keyword, setKeyword] = useState<string>("");
 
-  const [ isActive, setActive ] = useState<boolean>(false)
-  const [ keyword, setKeyword ] = useState<string>()
-
-  const handleSubmitForm = (e:any) => {
-    e.preventDefault()
-    navigate(`/search/${e.target[0].value}`)
-  }
+  const handleSubmitForm = () => {
+    navigation.navigate("Search", { keyword });
+  };
 
   return (
-    <div
-      className={`search_box flex items-center w-52 h-8 rounded-lg
-          ${
-            ( isActive === false
-              ? "bg-[color:var(--color-secondary-bg-for-transparent)]"
-              : "bg-[color:var(--color-primary-bg-for-transparent)]"
-            )
-          }
-        `
-      }
+    <View
+      style={{
+        flexDirection: "row",
+        alignItems: "center",
+        height: 40,
+        borderRadius: 20,
+        flexGrow: 1,
+        backgroundColor: isActive? colors.white: colors.transparentGray
+      }}
     >
-      {/* Icon Search */}
-      <div
-        className={`icon_search ml-2 mr-1
-            ${(isActive === false ? "opacity-25" : "")}
-          `
-        }
+      <View
+        style={{
+          marginLeft: 8,
+          marginRight: 4,
+          opacity: isActive ? 1 : 0.25,
+        }}
       >
-        <IconSearch setColor="var(--color-text)" setWidth="15px" setHeight="15px"/>
-      </div>
-      {/* Input */}
-      <form
-        method="GET"
-        onSubmit={handleSubmitForm}
+        <Icon name="search" size={24} />
+      </View>
+      <TouchableOpacity
+        onPress={() => setActive(!isActive)}
+        activeOpacity={1}
+        style={{ flex: 1 }}
       >
-        <input
-          type="search"
+        <TextInput
           value={keyword}
-          placeholder={ isActive === false ? "Search" : "" }
-          className={ "input_search text-[16px] text-[color:var(--color-text)] border-none bg-transparent font-semibold outline-none w-10/12 " + (isActive === false ? "opacity-25" : "") }
-          onFocus={ () => { setActive(!isActive) } }
-          onBlur={ () => { setActive(!isActive) } }
-          onChange={e => setKeyword(e.target.value)}
-        >
-        </input>
-      </form>
-    </div>
-  )
-}
+          placeholder={"Search"}
+          style={{
+            fontSize: 16,
+            color: colors.black,
+            borderWidth: 0,
+            backgroundColor: "transparent",
+            fontWeight: "bold",
+            width: "100%",
+            opacity: isActive ? 1 : 0.25,
+            textDecorationLine: "none",
+          }}
+          onFocus={() => setActive(true)}
+          onBlur={() => setActive(false)}
+          onChangeText={(text) => setKeyword(text)}
+          onSubmitEditing={handleSubmitForm}
+        />
+      </TouchableOpacity>
+    </View>
+  );
+};
 
-export default SearchBox
+export default SearchBox;

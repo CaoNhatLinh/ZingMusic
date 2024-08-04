@@ -1,43 +1,44 @@
-import React, { useEffect, useState } from "react"
-import { getCharthome } from "../api/zingchart"
-import TrackPlaylist from "../components/TrackPlaylist"
-import { useAppDispatch } from "../hooks/redux"
-import { setPlaylistSong } from "../redux/features/audioSlice"
-import Loading from "../components/Loading"
+import React, { useEffect, useState } from "react";
+import { ActivityIndicator, Text, View } from "react-native";
+import { getCharthome } from "../api/zingchart";
+import TrackPlaylist from "../components/TrackPlaylist";
+import { useDispatch } from "react-redux";
+import { setPlaylistSong } from "../redux/features/audioSlice";
+import SearchBox from "../components/Navbar/SearchBox";
+import colors from "../assets/colors";
 
-const ChartHome:React.FC = () => {
+const ChartHome: React.FC = () => {
+  const [dataChartHome, setDataChartHome] = useState<any>();
 
-  const [dataChartHome, setDataChartHome] = useState<any>()
-
-  const dispatch = useAppDispatch()
-
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    (
-      async () => {
-        setDataChartHome(await getCharthome())
-      }
-    )()
-  }, [])
+    (async () => {
+      setDataChartHome(await getCharthome());
+    })();
+  }, []);
 
-  dataChartHome &&
-  dispatch(setPlaylistSong(dataChartHome.RTChart.items))
+  useEffect(() => {
+    if (dataChartHome) {
+      dispatch(setPlaylistSong(dataChartHome.RTChart.items));
+    }
+  }, [dataChartHome]);
 
   return (
-    <>
-      <main className="inset-0 box-border pt-[64px] pb-[96px] px-[10vw]">
-        <div className="mt-8">
-          {
-            dataChartHome
-            ?
-            <TrackPlaylist items={dataChartHome.RTChart.items}/>
-            :
-            <Loading />
-          }
-        </div>
-      </main>
-    </>
-  )
-}
+    
+    <View style={{ flex: 1, paddingTop: 24, paddingHorizontal: 10 }}>
+      <View>
+        <Text style={{ fontSize: 32, fontWeight: "bold",color:colors.googlePlus }}>Bảng xếp hạng</Text>
+      </View>
+      <View style={{ marginTop: 8 }}>
+        {dataChartHome ? (
+          <TrackPlaylist items={dataChartHome.RTChart.items} />
+        ) : (
+          <ActivityIndicator />
+        )}
+      </View>
+    </View>
+  );
+};
 
-export default ChartHome
+export default ChartHome;

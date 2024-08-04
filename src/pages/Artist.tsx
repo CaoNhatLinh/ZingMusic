@@ -2,11 +2,10 @@ import React, { useEffect, useState } from "react";
 import { getArtist, getArtistSong } from "../api/artist";
 import DetailArtistInfo from "../components/DetailArtistInfo";
 import TrackPlaylist from "../components/TrackPlaylist";
-import Loading from "../components/Loading";
 import { useAppDispatch } from "../hooks/redux";
 import { setPlaylistSong } from "../redux/features/audioSlice";
 import { useRoute } from "@react-navigation/native";
-import { Text, View, FlatList, StyleSheet, Dimensions } from "react-native";
+import { Text, View, FlatList, StyleSheet, Dimensions, ActivityIndicator } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 
 interface artistType {
@@ -85,12 +84,12 @@ const Artist: React.FC = () => {
             renderItem={({ item }) => <TrackPlaylist items={[item]} />}
             onEndReached={fetchMoreDataSongArtist}
             onEndReachedThreshold={0.5}
-            ListFooterComponent={loading ? <Loading /> : null}
+            ListFooterComponent={loading ? <ActivityIndicator /> : null}
           />
           </ScrollView >
         </>
       ) : (
-        <Loading />
+        <ActivityIndicator />
       )}
       </ScrollView>
     </View>

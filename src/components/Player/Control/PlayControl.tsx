@@ -1,7 +1,6 @@
 import React from "react";
-import { View, TouchableOpacity } from "react-native";
+import {  TouchableOpacity } from "react-native";
 import { changeIconPlay } from "../../../redux/features/audioSlice";
-import Sound from "react-native-sound";
 import { useAppDispatch, useAppSelector } from "../../../hooks/redux";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { useAudio } from "../../../utils/AudioContext";
